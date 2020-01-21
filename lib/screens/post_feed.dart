@@ -14,8 +14,8 @@ class _PostFeedState extends State<PostFeed> {
         backgroundColor: Theme.of(context).canvasColor,
         title: Text(
           'Posts',
-          style: TextStyle(
-            fontSize: 24,
+          style: GoogleFonts.openSans(
+            fontSize: 26,
             fontWeight: FontWeight.bold,
           ),
         ),
