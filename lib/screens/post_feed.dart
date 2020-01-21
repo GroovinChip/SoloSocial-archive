@@ -25,7 +25,10 @@ class _PostFeedState extends State<PostFeed> {
         itemCount: 2,
         padding: EdgeInsets.only(left: 8, right: 8),
         itemBuilder: (context, index) {
-          return PostCard();
+          return PostCard(
+            username: 'Reuben Turner',
+            postText: 'Test post',
+          );
         },
       ),
       floatingActionButton: ComposeFab(),

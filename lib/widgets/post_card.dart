@@ -1,6 +1,15 @@
 import 'package:solo_social/library.dart';
 
 class PostCard extends StatelessWidget {
+  final String username;
+  final String postText;
+
+  const PostCard({
+    Key key,
+    this.username,
+    this.postText,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -25,7 +34,7 @@ class PostCard extends StatelessWidget {
               ),
             ),
             title: Text(
-              'User Userstein',
+              username,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),
@@ -67,8 +76,7 @@ class PostCard extends StatelessWidget {
               child: CircleAvatar(),
             ),*/
             title: Text(
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non ultricies orci. '
-                  'Pellentesque lacus justo, finibus sed augue eu, cursus auctor neque. Sed ac consequat.',
+              postText,
               style: TextStyle(
                 fontSize: 18,
               ),
