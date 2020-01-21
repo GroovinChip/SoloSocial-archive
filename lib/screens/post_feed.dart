@@ -20,7 +20,7 @@ class _PostFeedState extends State<PostFeed> {
           ),
         ),
       ),
-      body: ListView.builder( //todo: extract to own widget file
+      body: ListView.builder( //todo: maybe extract to own widget file
         //todo: get posts from firestore
         itemCount: 2,
         padding: EdgeInsets.only(left: 8, right: 8),
@@ -52,7 +52,10 @@ class _PostFeedState extends State<PostFeed> {
               ),
               IconButton(
                 icon: Icon(Icons.search),
-                onPressed: () {},
+                onPressed: () => showSearch(
+                  context: context,
+                  delegate: PostSearch(),
+                ),
               ),
             ],
           ),

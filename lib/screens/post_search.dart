@@ -1,13 +1,37 @@
 import 'package:solo_social/library.dart';
 
-class PostSearch extends StatefulWidget {
-  @override
-  _PostSearchState createState() => _PostSearchState();
-}
+class PostSearch extends SearchDelegate {
 
-class _PostSearchState extends State<PostSearch> {
   @override
-  Widget build(BuildContext context) {
-    return Container();
+  // TODO: implement searchFieldLabel
+  String get searchFieldLabel => 'Search Posts';
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    return ThemeData(
+      brightness: Brightness.dark,
+      primaryColor: Colors.indigo[600],
+
+    );
+  }
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return null;
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return null;
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Scaffold();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return Scaffold();
   }
 }

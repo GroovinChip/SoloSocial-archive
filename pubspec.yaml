@@ -18,6 +18,8 @@ dependencies:
   #cloud_firestore: ^0.13.0+1
   groovin_widgets: ^1.4.2
   #auto_animated: ^2.0.1
+  avataaar_image: ^1.0.8
+  material_design_icons_flutter: ^3.4.4795
 
 
 dev_dependencies:
