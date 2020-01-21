@@ -36,10 +36,16 @@ class PostCard extends StatelessWidget {
             title: Text(
               username,
               style: TextStyle(
+                color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            subtitle: Text('2 min ago'),
+            subtitle: Text(
+              '2 min ago',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
             trailing: PopupMenuButton(
               child: Ink(
                 child: Icon(Icons.keyboard_arrow_down),
@@ -53,7 +59,12 @@ class PostCard extends StatelessWidget {
                     children: <Widget>[
                       Icon(MdiIcons.exitRun),
                       SizedBox(width: 8),
-                      Text('Go to source'),
+                      Text(
+                        'Go to source',
+                        style: TextStyle(
+                          color: Colors.white
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -62,7 +73,12 @@ class PostCard extends StatelessWidget {
                     children: <Widget>[
                       Icon(MdiIcons.share),
                       SizedBox(width: 8),
-                      Text('Share'),
+                      Text(
+                        'Share',
+                        style: TextStyle(
+                            color: Colors.white
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -71,20 +87,14 @@ class PostCard extends StatelessWidget {
             ),
           ),
           ListTile(
-            /*leading: Opacity(
-              opacity: 0,
-              child: CircleAvatar(),
-            ),*/
             title: Text(
               postText,
               style: TextStyle(
                 fontSize: 18,
+                color: Colors.white,
               ),
             ),
           ),
-          /*ListTile(
-            title: Text('SOURCE: Example Source'),
-          ),*/
           Padding(
             padding: const EdgeInsets.only(left: 12, right: 12),
             child: Container(
