@@ -20,7 +20,7 @@ class _PostFeedState extends State<PostFeed> {
           ),
         ),
       ),
-      body: ListView.builder( //todo: maybe extract to own widget file
+      body: ListView.builder(
         //todo: get posts from firestore
         itemCount: 2,
         padding: EdgeInsets.only(left: 8, right: 8),
@@ -28,6 +28,7 @@ class _PostFeedState extends State<PostFeed> {
           return PostCard(
             username: 'Reuben Turner',
             postText: 'Test post',
+            tags: [],
           );
         },
       ),

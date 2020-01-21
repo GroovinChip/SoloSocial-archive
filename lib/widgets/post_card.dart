@@ -3,11 +3,13 @@ import 'package:solo_social/library.dart';
 class PostCard extends StatelessWidget {
   final String username;
   final String postText;
+  final List<String> tags;
 
   const PostCard({
     Key key,
     this.username,
     this.postText,
+    this.tags
   }) : super(key: key);
 
   @override
@@ -95,25 +97,25 @@ class PostCard extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
+          tags.length > 0 ? Padding(
             padding: const EdgeInsets.only(left: 12, right: 12),
             child: Container(
               height: 50,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 4,
+                itemCount: tags.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: Chip(
-                      label: Text('Ex. Tag'),
+                      label: Text(tags[index]),
                       backgroundColor: Theme.of(context).accentColor,
                     ),
                   );
                 },
               ),
             ),
-          ),
+          ) : Container(),
           SizedBox(height: 12),
         ],
       ),
