@@ -84,6 +84,20 @@ class PostCard extends StatelessWidget {
                     ],
                   ),
                 ),
+                PopupMenuItem(
+                  child: Row(
+                    children: <Widget>[
+                      Icon(MdiIcons.delete),
+                      SizedBox(width: 8),
+                      Text(
+                        'Delete',
+                        style: TextStyle(
+                            color: Colors.white
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ],
               onSelected: (value) {},
             ),
@@ -116,7 +130,7 @@ class PostCard extends StatelessWidget {
               ),
             ),
           ) : Container(),
-          SizedBox(height: 12),
+          tags.length > 0 ? SizedBox(height: 12) : Container(),
         ],
       ),
     );

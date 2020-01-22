@@ -6,6 +6,7 @@ export 'package:groovin_widgets/groovin_widgets.dart';
 export 'package:google_fonts/google_fonts.dart';
 export 'package:avataaar_image/avataaar_image.dart';
 export 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+export 'package:introduction_screen/introduction_screen.dart';
 
 /// Screens
 export 'package:solo_social/screens/post_feed.dart';

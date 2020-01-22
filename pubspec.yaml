@@ -20,7 +20,7 @@ dependencies:
   #auto_animated: ^2.0.1
   avataaar_image: ^1.0.8
   material_design_icons_flutter: ^3.4.4795
-
+  introduction_screen: ^1.0.7
 
 dev_dependencies:
   flutter_test:

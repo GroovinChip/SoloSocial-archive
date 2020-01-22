@@ -25,10 +25,13 @@ class _PostFeedState extends State<PostFeed> {
         itemCount: 2,
         padding: EdgeInsets.only(left: 8, right: 8),
         itemBuilder: (context, index) {
-          return PostCard(
-            username: 'Reuben Turner',
-            postText: 'Test post',
-            tags: [],
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: PostCard(
+              username: 'Reuben Turner',
+              postText: 'Test post',
+              tags: [],
+            ),
           );
         },
       ),
