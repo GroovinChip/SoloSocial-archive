@@ -12,6 +12,7 @@ export 'package:introduction_screen/introduction_screen.dart';
 export 'package:solo_social/screens/post_feed.dart';
 export 'package:solo_social/screens/compose_post.dart';
 export 'package:solo_social/screens/post_search.dart';
+export 'package:solo_social/screens/introduction.dart';
 
 /// Widgets
 export 'package:solo_social/widgets/post_card.dart';
