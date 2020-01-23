@@ -5,6 +5,6 @@ class AuthCheck extends StatelessWidget {
   Widget build(BuildContext context) {
     //todo: firebase auth
     //todo: first-launch check
-    return Introduction();
+    return Landing();
   }
 }

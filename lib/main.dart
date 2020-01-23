@@ -17,7 +17,7 @@ class SoloSocialApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: AuthCheck(),
+      home: PostFeed(),
       debugShowCheckedModeBanner: false,
     );
   }
