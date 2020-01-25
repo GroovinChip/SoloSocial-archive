@@ -14,18 +14,25 @@ class _PostFeedState extends State<PostFeed> {
         backgroundColor: Theme.of(context).canvasColor,
         title: Text(
           'Posts',
-          style: TextStyle(
-            fontSize: 24,
+          style: GoogleFonts.openSans(
+            fontSize: 26,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
-      body: ListView.builder( //todo: extract to own widget file
+      body: ListView.builder(
         //todo: get posts from firestore
         itemCount: 2,
         padding: EdgeInsets.only(left: 8, right: 8),
         itemBuilder: (context, index) {
-          return PostCard();
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: PostCard(
+              username: 'Reuben Turner',
+              postText: 'Test post',
+              tags: [],
+            ),
+          );
         },
       ),
       floatingActionButton: ComposeFab(),
@@ -52,7 +59,10 @@ class _PostFeedState extends State<PostFeed> {
               ),
               IconButton(
                 icon: Icon(Icons.search),
-                onPressed: () {},
+                onPressed: () => showSearch(
+                  context: context,
+                  delegate: PostSearch(),
+                ),
               ),
             ],
           ),

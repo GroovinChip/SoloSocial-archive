@@ -13,8 +13,14 @@ class SoloSocialApp extends StatelessWidget {
         accentColor: Colors.indigoAccent,
         brightness: Brightness.dark,
         canvasColor: Colors.indigo[800],
+        textTheme: GoogleFonts.openSansTextTheme(
+          Theme.of(context).textTheme,
+        ),
       ),
-      home: AuthCheck(),
+      home: Introduction(),
+      routes: <String, WidgetBuilder>{
+        '/PostFeed': (BuildContext context) => PostFeed(),
+      },
       debugShowCheckedModeBanner: false,
     );
   }
