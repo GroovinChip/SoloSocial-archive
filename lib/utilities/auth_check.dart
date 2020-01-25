@@ -8,12 +8,17 @@ class AuthCheck extends StatefulWidget {
 class _AuthCheckState extends State<AuthCheck> {
   SharedPreferences _prefs;
   bool _isFirstLaunch;
+  FirebaseUser _user;
 
   /// Check for first launch; is true by default
   void _checkForFirstLaunch() async {
     _prefs = await SharedPreferences.getInstance();
     _isFirstLaunch = _prefs.getBool('isFirstLaunch') ?? true;
-    print(_isFirstLaunch);
+  }
+
+  /// Check for cached user
+  void _checkForCachedUser() async {
+    _user = await FirebaseAuth.instance.currentUser();
   }
 
   @override
@@ -28,7 +33,10 @@ class _AuthCheckState extends State<AuthCheck> {
     if (_isFirstLaunch == true) {
       return Introduction();
     } else {
-      return PostFeed();
+      if (_user != null) {
+        //todo: add user to bloc
+        return PostFeed();
+      }
     }
   }
 }

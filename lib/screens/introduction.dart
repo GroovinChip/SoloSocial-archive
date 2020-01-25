@@ -2,6 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:solo_social/library.dart';
 
 class Introduction extends StatelessWidget {
+  /// Auth related inits
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  /// Sign in with Google Auth
+  Future<FirebaseUser> _handleSignIn() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    //todo: add GoogleUser photoUrl to user
+    final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+    print("signed in " + user.displayName);
+    return user;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,8 +134,11 @@ class Introduction extends StatelessWidget {
               bodyWidget: SignInButton(
                 Buttons.Google,
                 onPressed: () {
-                  //todo: implement google auth
-                  Navigator.of(context).pushNamedAndRemoveUntil('/PostFeed', (route) => false);
+                  _handleSignIn().then((FirebaseUser user) {
+                    //todo: set isFirstLaunch flag to false in SharedPreferences
+                    //todo: add user to bloc
+                    Navigator.of(context).pushNamedAndRemoveUntil('/PostFeed', (route) => false);
+                  }).catchError((e) => print(e));
                 },
               ),
             ),
@@ -133,7 +155,7 @@ class Introduction extends StatelessWidget {
           dotsDecorator: DotsDecorator(
             activeColor: Theme.of(context).accentColor,
             activeShape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25.0),
+              borderRadius: BorderRadius.circular(25.0),
             ),
             size: const Size.square(10.0),
             activeSize: const Size(20.0, 10.0),
