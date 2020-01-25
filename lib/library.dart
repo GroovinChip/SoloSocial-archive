@@ -8,6 +8,7 @@ export 'package:avataaar_image/avataaar_image.dart';
 export 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 export 'package:introduction_screen/introduction_screen.dart';
 export 'package:flutter_signin_button/flutter_signin_button.dart';
+export 'package:shared_preferences/shared_preferences.dart';
 
 /// Screens
 export 'package:solo_social/screens/post_feed.dart';
