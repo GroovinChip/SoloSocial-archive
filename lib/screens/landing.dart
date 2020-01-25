@@ -76,7 +76,7 @@ class Landing extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 16, right: 16),
                     child: OutlineButton(
-                      child: Text('Sign Up by Email'),
+                      child: Text('Sign Up with Email'),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),

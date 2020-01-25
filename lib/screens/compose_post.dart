@@ -44,7 +44,16 @@ class _ComposePostState extends State<ComposePost> {
             children: <Widget>[
               Row(
                 children: <Widget>[
+                  //todo: adapt avatar based on user type
                   Padding(
+                    padding: const EdgeInsets.only(bottom: 134),
+                    child: CircleAvatar(
+                      child: Text('U'),
+                      backgroundColor: Theme.of(context).accentColor,
+                      //todo: GoogleUser avatar
+                    ),
+                  ),
+                  /*Padding(
                     padding: const EdgeInsets.only(bottom: 116),
                     child: AvataaarImage(
                       //TODO: allow user choice of avatar in future versions
@@ -56,7 +65,7 @@ class _ComposePostState extends State<ComposePost> {
                         clothes: Clothes.blazerShirt,
                       ),
                     ),
-                  ),
+                  ),*/
                   SizedBox(width: 16),
                   Expanded(
                     child: TextField(

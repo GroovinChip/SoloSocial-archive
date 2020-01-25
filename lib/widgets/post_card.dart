@@ -22,7 +22,8 @@ class PostCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           ListTile(
-            leading: AvataaarImage(
+            /// if google user, CircleAvatar. Else, AvataaarImage
+            /*leading: AvataaarImage(
               errorImage: CircleAvatar(
                 child: Text('ERR'),
                 backgroundColor: Theme.of(context).primaryColor,
@@ -34,6 +35,10 @@ class PostCard extends StatelessWidget {
                 mouth: Mouth.smile,
                 clothes: Clothes.blazerShirt,
               ),
+            ),*/
+            leading: CircleAvatar( //todo: GoogleUser avatar
+              backgroundColor: Theme.of(context).accentColor,
+              child: Text('U'),
             ),
             title: Text(
               username,

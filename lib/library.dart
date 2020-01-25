@@ -7,6 +7,7 @@ export 'package:google_fonts/google_fonts.dart';
 export 'package:avataaar_image/avataaar_image.dart';
 export 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 export 'package:introduction_screen/introduction_screen.dart';
+export 'package:flutter_signin_button/flutter_signin_button.dart';
 
 /// Screens
 export 'package:solo_social/screens/post_feed.dart';
@@ -14,6 +15,8 @@ export 'package:solo_social/screens/compose_post.dart';
 export 'package:solo_social/screens/post_search.dart';
 export 'package:solo_social/screens/introduction.dart';
 export 'package:solo_social/screens/landing.dart';
+export 'package:solo_social/screens/signup.dart';
+export 'package:solo_social/screens/login.dart';
 
 /// Widgets
 export 'package:solo_social/widgets/post_card.dart';

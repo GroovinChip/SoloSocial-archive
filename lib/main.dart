@@ -17,7 +17,10 @@ class SoloSocialApp extends StatelessWidget {
           Theme.of(context).textTheme,
         ),
       ),
-      home: PostFeed(),
+      home: Introduction(),
+      routes: <String, WidgetBuilder>{
+        '/PostFeed': (BuildContext context) => PostFeed(),
+      },
       debugShowCheckedModeBanner: false,
     );
   }
