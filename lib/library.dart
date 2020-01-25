@@ -1,6 +1,7 @@
 /// Packages
 export 'package:flutter/material.dart';
-//export 'package:firebase_auth/firebase_auth.dart';
+export 'package:firebase_auth/firebase_auth.dart';
+export 'package:google_sign_in/google_sign_in.dart';
 //export 'package:cloud_firestore/cloud_firestore.dart';
 export 'package:groovin_widgets/groovin_widgets.dart';
 export 'package:google_fonts/google_fonts.dart';
