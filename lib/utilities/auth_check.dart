@@ -24,18 +24,21 @@ class _AuthCheckState extends State<AuthCheck> {
   @override
   void initState() {
     _checkForFirstLaunch();
+    _checkForCachedUser();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    //todo: firebase auth and auth check
-    if (_isFirstLaunch == true) {
+    final _userBloc = Provider.of<UserBloc>(context);
+    if (_isFirstLaunch && _user == null) {
       return Introduction();
     } else {
-      if (_user != null) {
-        //todo: add user to bloc
+      if (!_isFirstLaunch && _user != null) {
+        _userBloc.user.add(_user);
         return PostFeed();
+      } else {
+        return Container();
       }
     }
   }

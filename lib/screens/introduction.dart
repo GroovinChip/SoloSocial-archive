@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:solo_social/library.dart';
 
-class Introduction extends StatelessWidget {
+class Introduction extends StatefulWidget {
+  @override
+  _IntroductionState createState() => _IntroductionState();
+}
+
+class _IntroductionState extends State<Introduction> {
+  SharedPreferences _prefs;
+
   /// Auth related inits
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -15,14 +22,28 @@ class Introduction extends StatelessWidget {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    //todo: add GoogleUser photoUrl to user
     final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+    UserUpdateInfo _userUpdateInfo = UserUpdateInfo();
+    _userUpdateInfo.photoUrl = googleUser.photoUrl;
+    _userUpdateInfo.displayName = googleUser.displayName;
+    user.updateProfile(_userUpdateInfo);
     print("signed in " + user.displayName);
     return user;
   }
 
+  void _setFirstLaunchFlag() async {
+    _prefs = await SharedPreferences.getInstance();
+    _prefs.setBool('isFirstLaunch', false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final _userBloc = Provider.of<UserBloc>(context);
     return Scaffold(
       body: SafeArea(
         child: IntroductionScreen(
@@ -135,8 +156,9 @@ class Introduction extends StatelessWidget {
                 Buttons.Google,
                 onPressed: () {
                   _handleSignIn().then((FirebaseUser user) {
-                    //todo: set isFirstLaunch flag to false in SharedPreferences
-                    //todo: add user to bloc
+                    _setFirstLaunchFlag();
+                    _userBloc.user.add(user);
+                    //todo: create firestore collection for user
                     Navigator.of(context).pushNamedAndRemoveUntil('/PostFeed', (route) => false);
                   }).catchError((e) => print(e));
                 },

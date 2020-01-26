@@ -7,6 +7,7 @@ class MainMenuSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _userBloc = Provider.of<UserBloc>(context);
     return Theme(
       data: ThemeData.dark(
 
@@ -18,6 +19,28 @@ class MainMenuSheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8),
               child: ModalDrawerHandle(),
+            ),
+            StreamBuilder<FirebaseUser>(
+              stream: _userBloc.currentUser,
+              builder: (context, snapshot) {
+                print(snapshot.data);
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                } else {
+                  final user = snapshot.data;
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(user.photoUrl),
+                    ),
+                    title: Text(user.displayName),
+                    subtitle: Text(user.email),
+                    trailing: FlatButton(
+                      child: Text('Sign Out'),
+                      onPressed: () {}, //todo: handle sign-out
+                    ),
+                  );
+                }
+              }
             ),
             ListTile(
               leading: Icon(Icons.file_download),
