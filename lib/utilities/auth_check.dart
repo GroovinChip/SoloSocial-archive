@@ -31,15 +31,30 @@ class _AuthCheckState extends State<AuthCheck> {
   @override
   Widget build(BuildContext context) {
     final _userBloc = Provider.of<UserBloc>(context);
-    if (_isFirstLaunch && _user == null) {
+    if (_isFirstLaunch == true && _user == null) {
       return Introduction();
+    } else if (_isFirstLaunch == false && _user != null) {
+      _userBloc.user.add(_user);
+      return PostFeed();
     } else {
-      if (!_isFirstLaunch && _user != null) {
-        _userBloc.user.add(_user);
-        return PostFeed();
-      } else {
-        return Container();
-      }
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'SoloSocial',
+                style: GoogleFonts.openSans(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              CircularProgressIndicator(),
+            ],
+          ),
+        ),
+      );
     }
   }
 }

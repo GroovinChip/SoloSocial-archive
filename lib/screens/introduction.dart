@@ -27,13 +27,12 @@ class _IntroductionState extends State<Introduction> {
     _userUpdateInfo.photoUrl = googleUser.photoUrl;
     _userUpdateInfo.displayName = googleUser.displayName;
     user.updateProfile(_userUpdateInfo);
-    print("signed in " + user.displayName);
     return user;
   }
 
   void _setFirstLaunchFlag() async {
     _prefs = await SharedPreferences.getInstance();
-    _prefs.setBool('isFirstLaunch', false);
+    await _prefs.setBool('isFirstLaunch', false);
   }
 
   @override

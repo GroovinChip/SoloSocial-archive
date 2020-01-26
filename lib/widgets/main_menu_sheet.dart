@@ -23,7 +23,6 @@ class MainMenuSheet extends StatelessWidget {
             StreamBuilder<FirebaseUser>(
               stream: _userBloc.currentUser,
               builder: (context, snapshot) {
-                print(snapshot.data);
                 if (!snapshot.hasData) {
                   return CircularProgressIndicator();
                 } else {
@@ -47,7 +46,7 @@ class MainMenuSheet extends StatelessWidget {
               title: Text('Download Posts'),
               onTap: () {},
             ),
-            ListTile(
+            /*ListTile(
               leading: Icon(Icons.alternate_email),
               title: Text('Contact Developer'),
               onTap: () {},
@@ -56,7 +55,7 @@ class MainMenuSheet extends StatelessWidget {
               leading: Icon(Icons.info_outline),
               title: Text('App Info'),
               onTap: () {},
-            ),
+            ),*/
           ],
         ),
       ),
