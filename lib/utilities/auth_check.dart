@@ -73,6 +73,7 @@ class _AuthCheckState extends State<AuthCheck> {
             _userBloc.user.add(_user);
             return PostFeed();
           } else {
+            //todo: add check for signed out user and nav to login screen
             return Introduction();
           }
         }

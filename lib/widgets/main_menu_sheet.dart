@@ -36,6 +36,7 @@ class MainMenuSheet extends StatelessWidget {
                       child: Text('Sign Out'),
                       onPressed: () {
                         _auth.signOut();
+                        //todo: add SharedPreferences flag for signed out user for login screen on launch
                         Navigator.of(context).pushAndRemoveUntil(
                           MaterialPageRoute(
                             builder: (context) => Introduction(), //todo: replace with login screen
