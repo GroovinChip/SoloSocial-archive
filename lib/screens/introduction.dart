@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:solo_social/library.dart';
 
+import 'post_feed.dart';
+
 class Introduction extends StatefulWidget {
   @override
   _IntroductionState createState() => _IntroductionState();
@@ -158,7 +160,12 @@ class _IntroductionState extends State<Introduction> {
                     _setFirstLaunchFlag();
                     _userBloc.user.add(user);
                     //todo: create firestore collection for user
-                    Navigator.of(context).pushNamedAndRemoveUntil('/PostFeed', (route) => false);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => PostFeed(),
+                      ),
+                      (route) => false,
+                    );
                   }).catchError((e) => print('GoogleAuth error: $e'));
                 },
               ),

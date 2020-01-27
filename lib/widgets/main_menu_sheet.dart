@@ -1,9 +1,7 @@
 import 'package:solo_social/library.dart';
 
 class MainMenuSheet extends StatelessWidget {
-  const MainMenuSheet({
-    Key key,
-  }) : super(key: key);
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +27,21 @@ class MainMenuSheet extends StatelessWidget {
                   final user = snapshot.data;
                   return ListTile(
                     leading: CircleAvatar(
+                      backgroundColor: Colors.white,
                       backgroundImage: NetworkImage(user.photoUrl),
                     ),
                     title: Text(user.displayName),
                     subtitle: Text(user.email),
                     trailing: FlatButton(
                       child: Text('Sign Out'),
-                      onPressed: () {}, //todo: handle sign-out
+                      onPressed: () {
+                        _auth.signOut();
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => Introduction(), //todo: replace with login screen
+                          ), (route) => false,
+                        );
+                      },
                     ),
                   );
                 }

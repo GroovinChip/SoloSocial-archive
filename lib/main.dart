@@ -21,9 +21,6 @@ class SoloSocialApp extends StatelessWidget {
           ),
         ),
         home: AuthCheck(),
-        routes: <String, WidgetBuilder>{
-          '/PostFeed': (BuildContext context) => PostFeed(),
-        },
         debugShowCheckedModeBanner: false,
       ),
     );
