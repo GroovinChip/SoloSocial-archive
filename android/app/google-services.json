@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "176369690440-s7juem4c8jp7kturbbkuergd2gv2ivp9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.groovinchip.solo_social",
+            "certificate_hash": "cc96f4cf270b97de266ad1dd78f64d07d48212ad"
+          }
+        },
+        {
+          "client_id": "176369690440-97cnd3jqm8pcl12fli64hji08ffud79v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.groovinchip.solo_social",
+            "certificate_hash": "3583c159206c49e1c0499a37c83a15ec3df645a1"
+          }
+        },
+        {
           "client_id": "176369690440-gtmo21bgbg8rups46tc9o14ht6udhie3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

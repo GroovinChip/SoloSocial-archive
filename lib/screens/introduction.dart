@@ -159,7 +159,7 @@ class _IntroductionState extends State<Introduction> {
                     _userBloc.user.add(user);
                     //todo: create firestore collection for user
                     Navigator.of(context).pushNamedAndRemoveUntil('/PostFeed', (route) => false);
-                  }).catchError((e) => print(e));
+                  }).catchError((e) => print('GoogleAuth error: $e'));
                 },
               ),
             ),
