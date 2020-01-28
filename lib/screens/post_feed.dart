@@ -58,8 +58,10 @@ class _PostFeedState extends State<PostFeed> {
                         itemBuilder: (context, index) {
                           final _post = _posts[index];
                           return PostCard(
+                            user: _user,
                             username: _post['Username'],
                             postText: _post['PostText'],
+                            tags: _post['Tags'] == null ? [] : _post['Tags'],
                           );
                         },
                       );

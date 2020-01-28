@@ -8,6 +8,13 @@ class ComposePost extends StatefulWidget {
 class _ComposePostState extends State<ComposePost> {
   TextEditingController _postTextController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final List<String> _tags = [];
+  bool _postTagSelected = false;
+  bool _commentTagSelected = false;
+  bool _facebookTagSelected = false;
+  bool _instagramTagSelected = false;
+  bool _twitterTagSelected = false;
+  bool _redditTagSelected = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +56,16 @@ class _ComposePostState extends State<ComposePost> {
                       if (value == true) {
                         if (_postTextController.text.isNotEmpty) {
                           DateTime _timeCreated = DateTime.now();
-                          _posts.add({
-                            'Username':_user.displayName,
-                            'PostText':_postTextController.text,
-                            'TimeCreated':_timeCreated.toIso8601String(),
-                          });
+                          try {
+                            _posts.add({
+                              'Username':_user.displayName,
+                              'PostText':_postTextController.text,
+                              'TimeCreated':_timeCreated.toIso8601String(),
+                            });
+                            Navigator.of(context).pop();
+                          } catch (e) {
+                            print(e);
+                          }
                         } else {
                           _scaffoldKey.currentState.showSnackBar(
                             SnackBar(
@@ -70,11 +82,16 @@ class _ComposePostState extends State<ComposePost> {
                                 textColor: Colors.white,
                                 onPressed: () {
                                   DateTime _timeCreated = DateTime.now();
-                                  _posts.add({
-                                    'Username':_user.displayName,
-                                    'PostText':_postTextController.text,
-                                    'TimeCreated':_timeCreated.toIso8601String(),
-                                  });
+                                  try {
+                                    _posts.add({
+                                      'Username':_user.displayName,
+                                      'PostText':_postTextController.text,
+                                      'TimeCreated':_timeCreated.toIso8601String(),
+                                    });
+                                    Navigator.of(context).pop();
+                                  } catch (e) {
+                                    print(e);
+                                  }
                                 },
                               ),
                             ),
@@ -106,6 +123,9 @@ class _ComposePostState extends State<ComposePost> {
                         Expanded(
                           child: TextField(
                             controller: _postTextController,
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
                             decoration: InputDecoration(
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(14),
@@ -140,13 +160,47 @@ class _ComposePostState extends State<ComposePost> {
                         ),
                         ChoiceChip(
                           label: Text('Post'),
-                          selected: false,
-                          onSelected: (value) {},
+                          selected: _postTagSelected,
+                          selectedColor: Theme.of(context).accentColor,
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                          onSelected: (value) {
+                            if (value == true) {
+                              setState(() {
+                                _tags.add('Post');
+                                _postTagSelected = true;
+                                print(_tags);
+                              });
+                            } else {
+                              setState(() {
+                                _postTagSelected = false;
+                                _tags.remove('Post');
+                              });
+                            }
+                          },
                         ),
                         ChoiceChip(
                           label: Text('Comment'),
-                          selected: false,
-                          onSelected: (value) {},
+                          selected: _commentTagSelected,
+                          selectedColor: Theme.of(context).accentColor,
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                          onSelected: (value) {
+                            if (value == true) {
+                              setState(() {
+                                _tags.add('Comment');
+                                _commentTagSelected = true;
+                                print(_tags);
+                              });
+                            } else {
+                              setState(() {
+                                _commentTagSelected = false;
+                                _tags.remove('Comment');
+                              });
+                            }
+                          },
                         ),
                       ],
                     ),
@@ -155,23 +209,91 @@ class _ComposePostState extends State<ComposePost> {
                       children: <Widget>[
                         ChoiceChip(
                           label: Text('Facebook'),
-                          selected: false,
-                          onSelected: (value) {},
+                          selected: _facebookTagSelected,
+                          selectedColor: Theme.of(context).accentColor,
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                          onSelected: (value) {
+                            if (value == true) {
+                              setState(() {
+                                _tags.add('Facebook');
+                                _facebookTagSelected = true;
+                                print(_tags);
+                              });
+                            } else {
+                              setState(() {
+                                _facebookTagSelected = false;
+                                _tags.remove('Facebook');
+                              });
+                            }
+                          },
                         ),
                         ChoiceChip(
                           label: Text('Instagram'),
-                          selected: false,
-                          onSelected: (value) {},
+                          selected: _instagramTagSelected,
+                          selectedColor: Theme.of(context).accentColor,
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                          onSelected: (value) {
+                            if (value == true) {
+                              setState(() {
+                                _tags.add('Instagram');
+                                _instagramTagSelected = true;
+                                print(_tags);
+                              });
+                            } else {
+                              setState(() {
+                                _instagramTagSelected = false;
+                                _tags.remove('Instagram');
+                              });
+                            }
+                          },
                         ),
                         ChoiceChip(
                           label: Text('Twitter'),
-                          selected: false,
-                          onSelected: (value) {},
+                          selected: _twitterTagSelected,
+                          selectedColor: Theme.of(context).accentColor,
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                          onSelected: (value) {
+                            if (value == true) {
+                              setState(() {
+                                _tags.add('Twitter');
+                                _twitterTagSelected = true;
+                                print(_tags);
+                              });
+                            } else {
+                              setState(() {
+                                _twitterTagSelected = false;
+                                _tags.remove('Twitter');
+                              });
+                            }
+                          },
                         ),
                         ChoiceChip(
                           label: Text('Reddit'),
-                          selected: false,
-                          onSelected: (value) {},
+                          selected: _redditTagSelected,
+                          selectedColor: Theme.of(context).accentColor,
+                          labelStyle: TextStyle(
+                            color: Colors.white,
+                          ),
+                          onSelected: (value) {
+                            if (value == true) {
+                              setState(() {
+                                _tags.add('Reddit');
+                                _redditTagSelected = true;
+                                print(_tags);
+                              });
+                            } else {
+                              setState(() {
+                                _redditTagSelected = false;
+                                _tags.remove('Reddit');
+                              });
+                            }
+                          },
                         ),
                       ],
                     ),

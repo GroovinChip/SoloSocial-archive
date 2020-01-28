@@ -1,15 +1,17 @@
 import 'package:solo_social/library.dart';
 
 class PostCard extends StatelessWidget {
+  final FirebaseUser user;
   final String username;
   final String postText;
   final List<String> tags;
 
   const PostCard({
     Key key,
+    this.user,
     this.username,
     this.postText,
-    this.tags
+    this.tags,
   }) : super(key: key);
 
   @override
@@ -22,23 +24,8 @@ class PostCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           ListTile(
-            /// if google user, CircleAvatar. Else, AvataaarImage
-            /*leading: AvataaarImage(
-              errorImage: CircleAvatar(
-                child: Text('ERR'),
-                backgroundColor: Theme.of(context).primaryColor,
-              ),
-              avatar: Avataaar(
-                style: Style.circle,
-                skin: Skin.pale,
-                top: Top.shortHairShortWaved(),
-                mouth: Mouth.smile,
-                clothes: Clothes.blazerShirt,
-              ),
-            ),*/
-            leading: CircleAvatar( //todo: GoogleUser avatar
-              backgroundColor: Theme.of(context).accentColor,
-              child: Text('U'),
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(user.photoUrl),
             ),
             title: Text(
               username,
@@ -48,7 +35,7 @@ class PostCard extends StatelessWidget {
               ),
             ),
             subtitle: Text(
-              '2 min ago',
+              '2 min ago', //todo: use timeago package to determine
               style: TextStyle(
                 color: Colors.white,
               ),
