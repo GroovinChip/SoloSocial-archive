@@ -1,9 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:solo_social/library.dart';
 
-class Introduction extends StatelessWidget {
+import 'post_feed.dart';
+
+class Introduction extends StatefulWidget {
+  @override
+  _IntroductionState createState() => _IntroductionState();
+}
+
+class _IntroductionState extends State<Introduction> {
+  SharedPreferences _prefs;
+
+  /// Firebase related initializations
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final CollectionReference _users = Firestore.instance.collection('Users');
+
+  /// Sign in with Google Auth
+  Future<FirebaseUser> _handleSignIn() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+    UserUpdateInfo _userUpdateInfo = UserUpdateInfo();
+    _userUpdateInfo.photoUrl = googleUser.photoUrl;
+    _userUpdateInfo.displayName = googleUser.displayName;
+    user.updateProfile(_userUpdateInfo);
+    return user;
+  }
+
+  void _setFirstLaunchFlag() async {
+    _prefs = await SharedPreferences.getInstance();
+    await _prefs.setBool('isFirstLaunch', false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final _userBloc = Provider.of<UserBloc>(context);
     return Scaffold(
       body: SafeArea(
         child: IntroductionScreen(
@@ -115,8 +157,19 @@ class Introduction extends StatelessWidget {
               bodyWidget: SignInButton(
                 Buttons.Google,
                 onPressed: () {
-                  //todo: implement google auth
-                  Navigator.of(context).pushNamedAndRemoveUntil('/PostFeed', (route) => false);
+                  _handleSignIn().then((FirebaseUser user) {
+                    _setFirstLaunchFlag();
+                    _userBloc.user.add(user);
+                    if (_users.document(user.uid).path.isEmpty) {
+                      _users.document(user.uid).setData({});
+                    }
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => PostFeed(),
+                      ),
+                      (route) => false,
+                    );
+                  }).catchError((e) => print('GoogleAuth error: $e'));
                 },
               ),
             ),
@@ -133,7 +186,7 @@ class Introduction extends StatelessWidget {
           dotsDecorator: DotsDecorator(
             activeColor: Theme.of(context).accentColor,
             activeShape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25.0),
+              borderRadius: BorderRadius.circular(25.0),
             ),
             size: const Size.square(10.0),
             activeSize: const Size(20.0, 10.0),
