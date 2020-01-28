@@ -157,11 +157,11 @@ class _IntroductionState extends State<Introduction> {
               bodyWidget: SignInButton(
                 Buttons.Google,
                 onPressed: () {
-                  _handleSignIn().then((FirebaseUser user) {
+                  _handleSignIn().then((FirebaseUser user) async {
                     _setFirstLaunchFlag();
                     _userBloc.user.add(user);
                     if (_users.document(user.uid).path.isEmpty) {
-                      _users.document(user.uid).setData({});
+                      await _users.document(user.uid).setData({});
                     }
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
