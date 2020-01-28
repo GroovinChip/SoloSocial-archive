@@ -53,53 +53,7 @@ class _ComposePostState extends State<ComposePost> {
                     ),
                     backgroundColor: Theme.of(context).accentColor,
                     onSelected: (value) {
-                      if (value == true) {
-                        if (_postTextController.text.isNotEmpty) {
-                          DateTime _timeCreated = DateTime.now();
-                          try {
-                            _posts.add({
-                              'Username':_user.displayName,
-                              'PostText':_postTextController.text,
-                              'TimeCreated':_timeCreated.toIso8601String(),
-                              'Tags':jsonEncode(_tags),
-                            });
-                            Navigator.of(context).pop();
-                          } catch (e) {
-                            print(e);
-                          }
-                        } else {
-                          _scaffoldKey.currentState.showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Are you sure you want to post without adding text?',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              backgroundColor: Theme.of(context).accentColor,
-                              behavior: SnackBarBehavior.floating,
-                              action: SnackBarAction(
-                                label: 'Yes',
-                                textColor: Colors.white,
-                                onPressed: () {
-                                  DateTime _timeCreated = DateTime.now();
-                                  try {
-                                    _posts.add({
-                                      'Username':_user.displayName,
-                                      'PostText':_postTextController.text,
-                                      'TimeCreated':_timeCreated.toIso8601String(),
-                                      'Tags':jsonEncode(_tags),
-                                    });
-                                    Navigator.of(context).pop();
-                                  } catch (e) {
-                                    print(e);
-                                  }
-                                },
-                              ),
-                            ),
-                          );
-                        }
-                      }
+                      _makePost(value, _posts, _user, context);
                     },
                     selected: false,
                   ),
@@ -361,5 +315,54 @@ class _ComposePostState extends State<ComposePost> {
         }
       },
     );
+  }
+
+  void _makePost(bool value, CollectionReference _posts, FirebaseUser _user, BuildContext context) {
+    if (value == true) {
+      if (_postTextController.text.isNotEmpty) {
+        DateTime _timeCreated = DateTime.now();
+        try {
+          _addPostToFirestore(_posts, _user, _timeCreated);
+          Navigator.of(context).pop();
+        } catch (e) {
+          print(e);
+        }
+      } else {
+        _scaffoldKey.currentState.showSnackBar(
+          SnackBar(
+            content: Text(
+              'Are you sure you want to post without adding text?',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            backgroundColor: Theme.of(context).accentColor,
+            behavior: SnackBarBehavior.floating,
+            action: SnackBarAction(
+              label: 'Yes',
+              textColor: Colors.white,
+              onPressed: () {
+                DateTime _timeCreated = DateTime.now();
+                try {
+                  _addPostToFirestore(_posts, _user, _timeCreated);
+                  Navigator.of(context).pop();
+                } catch (e) {
+                  print(e);
+                }
+              },
+            ),
+          ),
+        );
+      }
+    }
+  }
+
+  void _addPostToFirestore(CollectionReference _posts, FirebaseUser _user, DateTime _timeCreated) {
+    _posts.add({
+      'Username':_user.displayName,
+      'PostText':_postTextController.text,
+      'TimeCreated':_timeCreated.toIso8601String(),
+      'Tags':jsonEncode(_tags),
+    });
   }
 }
