@@ -1,7 +1,8 @@
 import 'package:solo_social/library.dart';
 
-class PostCard extends StatelessWidget {
+class PostCard extends StatefulWidget {
   final FirebaseUser user;
+  final String postId;
   final String username;
   final String postText;
   final List<String> tags;
@@ -9,10 +10,31 @@ class PostCard extends StatelessWidget {
   const PostCard({
     Key key,
     this.user,
+    this.postId,
     this.username,
     this.postText,
     this.tags,
   }) : super(key: key);
+
+  @override
+  _PostCardState createState() => _PostCardState();
+}
+
+class _PostCardState extends State<PostCard> {
+  void _handleMenuSelection(String selection) {
+    switch (selection) {
+      case 'GoToSource':
+        break;
+      case 'Share':
+        break;
+      case 'Delete':
+        final CollectionReference _posts = Firestore.instance.collection('Users').document(widget.user.uid).collection('Posts');
+        setState(() {
+          _posts.document(widget.postId).delete();
+        });
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +47,10 @@ class PostCard extends StatelessWidget {
         children: <Widget>[
           ListTile(
             leading: CircleAvatar(
-              backgroundImage: NetworkImage(user.photoUrl),
+              backgroundImage: NetworkImage(widget.user.photoUrl),
             ),
             title: Text(
-              username,
+              widget.username,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -61,6 +83,7 @@ class PostCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  value: 'GoToSource',
                 ),
                 PopupMenuItem(
                   child: Row(
@@ -75,6 +98,7 @@ class PostCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  value: 'Share',
                 ),
                 PopupMenuItem(
                   child: Row(
@@ -89,32 +113,33 @@ class PostCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  value: 'Delete',
                 ),
               ],
-              onSelected: (value) {},
+              onSelected: _handleMenuSelection,
             ),
           ),
           ListTile(
             title: Text(
-              postText,
+              widget.postText,
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.white,
               ),
             ),
           ),
-          tags.length > 0 ? Padding(
+          widget.tags.length > 0 ? Padding(
             padding: const EdgeInsets.only(left: 12, right: 12),
             child: Container(
               height: 50,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: tags.length,
+                itemCount: widget.tags.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: Chip(
-                      label: Text(tags[index]),
+                      label: Text(widget.tags[index]),
                       backgroundColor: Theme.of(context).accentColor,
                     ),
                   );
@@ -122,7 +147,7 @@ class PostCard extends StatelessWidget {
               ),
             ),
           ) : Container(),
-          tags.length > 0 ? SizedBox(height: 12) : Container(),
+          widget.tags.length > 0 ? SizedBox(height: 12) : Container(),
         ],
       ),
     );

@@ -63,6 +63,7 @@ class _PostFeedState extends State<PostFeed> {
                           }
                           return PostCard(
                             user: _user,
+                            postId: _post.documentID,
                             username: _post['Username'],
                             postText: _post['PostText'],
                             tags: _tags == null || _tags.length == 0 ? [] : _tags,
