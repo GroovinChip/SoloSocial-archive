@@ -1,5 +1,6 @@
 import 'package:solo_social/library.dart';
 
+// ignore: must_be_immutable
 class MainMenuSheet extends StatelessWidget {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -7,9 +8,7 @@ class MainMenuSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final _userBloc = Provider.of<UserBloc>(context);
     return Theme(
-      data: ThemeData.dark(
-
-      ),
+      data: ThemeData.dark(),
       child: Container(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -19,34 +18,33 @@ class MainMenuSheet extends StatelessWidget {
               child: ModalDrawerHandle(),
             ),
             StreamBuilder<FirebaseUser>(
-              stream: _userBloc.currentUser,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
-                } else {
-                  final user = snapshot.data;
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      backgroundImage: NetworkImage(user.photoUrl),
-                    ),
-                    title: Text(user.displayName),
-                    subtitle: Text(user.email),
-                    trailing: FlatButton(
-                      child: Text('Sign Out'),
-                      onPressed: () {
-                        _auth.signOut();
-                        //todo: add SharedPreferences flag for signed out user for login screen on launch
-                        Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(
-                            builder: (context) => Introduction(), //todo: replace with login screen
-                          ), (route) => false,
-                        );
-                      },
-                    ),
-                  );
+                stream: _userBloc.currentUser,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                  } else {
+                    final user = snapshot.data;
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        backgroundImage: NetworkImage(user.photoUrl),
+                      ),
+                      title: Text(user.displayName),
+                      subtitle: Text(user.email),
+                      trailing: FlatButton(
+                        child: Text('Sign Out'),
+                        onPressed: () {
+                          _auth.signOut();
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (context) => Login(),
+                            ), (route) => false,
+                          );
+                        },
+                      ),
+                    );
+                  }
                 }
-              }
             ),
             ListTile(
               leading: Icon(Icons.file_download),
