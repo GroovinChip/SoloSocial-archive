@@ -61,6 +61,7 @@ class _ComposePostState extends State<ComposePost> {
                               'Username':_user.displayName,
                               'PostText':_postTextController.text,
                               'TimeCreated':_timeCreated.toIso8601String(),
+                              'Tags':jsonEncode(_tags),
                             });
                             Navigator.of(context).pop();
                           } catch (e) {
@@ -87,6 +88,7 @@ class _ComposePostState extends State<ComposePost> {
                                       'Username':_user.displayName,
                                       'PostText':_postTextController.text,
                                       'TimeCreated':_timeCreated.toIso8601String(),
+                                      'Tags':jsonEncode(_tags),
                                     });
                                     Navigator.of(context).pop();
                                   } catch (e) {

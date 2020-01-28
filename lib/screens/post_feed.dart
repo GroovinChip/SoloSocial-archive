@@ -57,11 +57,15 @@ class _PostFeedState extends State<PostFeed> {
                         itemCount: _posts.length,
                         itemBuilder: (context, index) {
                           final _post = _posts[index];
+                          var _tags;
+                          if (_post['Tags'] != null) {
+                            _tags = (jsonDecode(_post['Tags']) as List).cast<String>();
+                          }
                           return PostCard(
                             user: _user,
                             username: _post['Username'],
                             postText: _post['PostText'],
-                            tags: _post['Tags'] == null ? [] : _post['Tags'],
+                            tags: _tags == null || _tags.length == 0 ? [] : _tags,
                           );
                         },
                       );
