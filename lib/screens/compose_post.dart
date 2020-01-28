@@ -67,7 +67,6 @@ class _ComposePostState extends State<ComposePost> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        //todo: adapt avatar based on user type
                         Padding(
                           padding: const EdgeInsets.only(bottom: 134),
                           child: CircleAvatar(
