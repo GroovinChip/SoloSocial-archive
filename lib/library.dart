@@ -12,6 +12,7 @@ export 'package:flutter_signin_button/flutter_signin_button.dart';
 export 'package:shared_preferences/shared_preferences.dart';
 export 'package:rxdart/rxdart.dart';
 export 'package:provider/provider.dart';
+export 'dart:convert';
 
 /// Screens
 export 'package:solo_social/screens/post_feed.dart';
