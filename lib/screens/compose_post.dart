@@ -1,4 +1,3 @@
-import 'package:avataaar_image/avataaar_image.dart';
 import 'package:solo_social/library.dart';
 
 class ComposePost extends StatefulWidget {

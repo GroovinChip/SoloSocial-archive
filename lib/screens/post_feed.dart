@@ -6,68 +6,102 @@ class PostFeed extends StatefulWidget {
 }
 
 class _PostFeedState extends State<PostFeed> {
+  final CollectionReference _users = Firestore.instance.collection('Users');
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).canvasColor,
-        title: Text(
-          'Posts',
-          style: GoogleFonts.openSans(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-      body: ListView.builder(
-        //todo: get posts from firestore
-        itemCount: 2,
-        padding: EdgeInsets.only(left: 8, right: 8),
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 6),
-            child: PostCard(
-              username: 'Reuben Turner',
-              postText: 'Test post',
-              tags: [],
-            ),
-          );
-        },
-      ),
-      floatingActionButton: ComposeFab(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        color: Theme.of(context).primaryColor,
-        child: Container(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.menu),
-                onPressed: () => showModalBottomSheet(
-                  context: context,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(12),
-                      topLeft: Radius.circular(12),
-                    ),
+    final _userBloc = Provider.of<UserBloc>(context);
+    return StreamBuilder<FirebaseUser>(
+        stream: _userBloc.currentUser,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          } else {
+            final _user = snapshot.data;
+            return Scaffold(
+              appBar: AppBar(
+                elevation: 0,
+                backgroundColor: Theme.of(context).canvasColor,
+                title: Text(
+                  'Posts',
+                  style: GoogleFonts.openSans(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
                   ),
-                  backgroundColor: Theme.of(context).canvasColor,
-                  builder: (_) => MainMenuSheet(),
                 ),
               ),
-              IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () => showSearch(
-                  context: context,
-                  delegate: PostSearch(),
+              body: StreamBuilder<QuerySnapshot>(
+                stream: _users.document(_user.uid).collection('Posts').snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    final _posts = snapshot.data.documents;
+                    if (_posts.length == 0 || _posts == null) {
+                      return Center(
+                        child: Text(
+                          'No Posts',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return ListView.builder(
+                        itemCount: _posts.length,
+                        itemBuilder: (context, index) {
+                          final _post = _posts[index];
+                          return PostCard(
+                            username: _post['Username'],
+                            postText: _post['PostText'],
+                          );
+                        },
+                      );
+                    }
+                  }
+                },
+              ),
+              floatingActionButton: ComposeFab(),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+              bottomNavigationBar: BottomAppBar(
+                color: Theme.of(context).primaryColor,
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.menu),
+                        onPressed: () => showModalBottomSheet(
+                          context: context,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(12),
+                              topLeft: Radius.circular(12),
+                            ),
+                          ),
+                          backgroundColor: Theme.of(context).canvasColor,
+                          builder: (_) => MainMenuSheet(),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.search),
+                        onPressed: () => showSearch(
+                          context: context,
+                          delegate: PostSearch(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
+            );
+          }
+        });
   }
 }
