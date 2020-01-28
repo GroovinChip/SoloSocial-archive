@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sentry/sentry.dart';
 import 'package:solo_social/library.dart';
 
 import 'post_feed.dart';
@@ -46,6 +47,7 @@ class _IntroductionState extends State<Introduction> {
   @override
   Widget build(BuildContext context) {
     final _userBloc = Provider.of<UserBloc>(context);
+    final _sentry = Provider.of<SentryClient>(context);
     return Scaffold(
       body: SafeArea(
         child: IntroductionScreen(
@@ -156,20 +158,24 @@ class _IntroductionState extends State<Introduction> {
               ),
               bodyWidget: SignInButton(
                 Buttons.Google,
-                onPressed: () {
-                  _handleSignIn().then((FirebaseUser user) async {
-                    _setFirstLaunchFlag();
-                    _userBloc.user.add(user);
-                    if (_users.document(user.uid).path.isEmpty) {
-                      await _users.document(user.uid).setData({});
-                    }
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => PostFeed(),
-                      ),
-                      (route) => false,
-                    );
-                  }).catchError((e) => print('GoogleAuth error: $e'));
+                onPressed: () async {
+                  try {
+                    _handleSignIn().then((FirebaseUser user) async {
+                      _setFirstLaunchFlag();
+                      _userBloc.user.add(user);
+                      if (_users.document(user.uid).path.isEmpty) {
+                        await _users.document(user.uid).setData({});
+                      }
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => PostFeed(),
+                        ),
+                            (route) => false,
+                      );
+                    }).catchError((e) => print('GoogleAuth error: $e'));
+                  } catch (error, stacktrace) {
+                    await _sentry.captureException(exception: error, stackTrace: stacktrace);
+                  }
                 },
               ),
             ),
