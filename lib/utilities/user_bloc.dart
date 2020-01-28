@@ -1,4 +1,3 @@
-import 'package:rxdart/rxdart.dart';
 import 'package:solo_social/library.dart';
 
 class UserBloc {
