@@ -2,7 +2,7 @@
 export 'package:flutter/material.dart' hide Notification;
 export 'package:firebase_auth/firebase_auth.dart';
 export 'package:google_sign_in/google_sign_in.dart';
-//export 'package:cloud_firestore/cloud_firestore.dart';
+export 'package:cloud_firestore/cloud_firestore.dart';
 export 'package:groovin_widgets/groovin_widgets.dart';
 export 'package:google_fonts/google_fonts.dart';
 export 'package:avataaar_image/avataaar_image.dart';

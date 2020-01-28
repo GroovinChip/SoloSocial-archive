@@ -11,9 +11,10 @@ class Introduction extends StatefulWidget {
 class _IntroductionState extends State<Introduction> {
   SharedPreferences _prefs;
 
-  /// Auth related inits
+  /// Firebase related initializations
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final CollectionReference _users = Firestore.instance.collection('Users');
 
   /// Sign in with Google Auth
   Future<FirebaseUser> _handleSignIn() async {
@@ -159,7 +160,9 @@ class _IntroductionState extends State<Introduction> {
                   _handleSignIn().then((FirebaseUser user) {
                     _setFirstLaunchFlag();
                     _userBloc.user.add(user);
-                    //todo: create firestore collection for user
+                    if (_users.document(user.uid).path.isEmpty) {
+                      _users.document(user.uid).setData({});
+                    }
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                         builder: (context) => PostFeed(),
