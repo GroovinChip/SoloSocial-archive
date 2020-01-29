@@ -14,6 +14,7 @@ export 'package:rxdart/rxdart.dart';
 export 'package:provider/provider.dart';
 export 'dart:convert';
 export 'package:share/share.dart';
+export 'package:url_launcher/url_launcher.dart';
 
 /// Screens
 export 'package:solo_social/screens/post_feed.dart';

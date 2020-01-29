@@ -7,6 +7,7 @@ class ComposePost extends StatefulWidget {
 
 class _ComposePostState extends State<ComposePost> {
   TextEditingController _postTextController = TextEditingController();
+  TextEditingController _sourceLinkController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final List<String> _tags = [];
   bool _postTagSelected = false;
@@ -272,6 +273,7 @@ class _ComposePostState extends State<ComposePost> {
                                 contentPadding: EdgeInsets.all(16),
                                 children: <Widget>[
                                   TextField(
+                                    controller: _sourceLinkController,
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Theme.of(context).primaryColor,
@@ -295,7 +297,10 @@ class _ComposePostState extends State<ComposePost> {
                                         label: Text('Finish'),
                                         backgroundColor: Theme.of(context).accentColor,
                                         selected: false,
-                                        onSelected: (value) {},
+                                        onSelected: (value) {
+                                          //todo: consider auto-adding tags to indicate attachments
+                                          Navigator.pop(context);
+                                        },
                                       ),
                                     ],
                                   ),
@@ -316,6 +321,7 @@ class _ComposePostState extends State<ComposePost> {
     );
   }
 
+  /// Data validation prior to adding to Firestore
   void _makePost(bool value, CollectionReference _posts, FirebaseUser _user, BuildContext context) {
     if (value == true) {
       if (_postTextController.text.isNotEmpty) {
@@ -356,12 +362,14 @@ class _ComposePostState extends State<ComposePost> {
     }
   }
 
+  /// Actually add data to Firestore
   void _addPostToFirestore(CollectionReference _posts, FirebaseUser _user, DateTime _timeCreated) {
     _posts.add({
       'Username':_user.displayName,
       'PostText':_postTextController.text,
       'TimeCreated':_timeCreated.toIso8601String(),
       'Tags':jsonEncode(_tags),
+      'SourceLink':_sourceLinkController.text,
     });
   }
 }
