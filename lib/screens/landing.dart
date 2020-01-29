@@ -56,7 +56,7 @@ class Landing extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                       ),
-                      onPressed: () {}, //todo: integrate google sign in
+                      onPressed: () {},
                     ),
                   ),
                 ),

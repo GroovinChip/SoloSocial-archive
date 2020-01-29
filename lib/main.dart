@@ -1,3 +1,4 @@
+import 'package:provider/provider.dart';
 import 'package:solo_social/library.dart';
 import 'package:sentry/sentry.dart';
 
