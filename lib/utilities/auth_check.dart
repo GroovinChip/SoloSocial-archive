@@ -72,6 +72,8 @@ class _AuthCheckState extends State<AuthCheck> {
           if (_firstLaunch == false && _user != null) {
             _userBloc.user.add(_user);
             return PostFeed();
+          } else if (_firstLaunch == true && _user == null) {
+            return Introduction();
           } else {
             return Login();
           }
