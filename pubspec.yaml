@@ -1,7 +1,7 @@
 name: solo_social
 description: SoloSocial.
 
-version: 0.0.13
+version: 0.0.14
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -25,6 +25,7 @@ dependencies:
   flutter_signin_button: ^1.0.0
   sentry: ^3.0.1
   timeago: ^2.0.25
+  share: ^0.6.3+5
 
 dev_dependencies:
   flutter_test:

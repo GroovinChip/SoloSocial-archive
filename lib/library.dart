@@ -13,6 +13,7 @@ export 'package:shared_preferences/shared_preferences.dart';
 export 'package:rxdart/rxdart.dart';
 export 'package:provider/provider.dart';
 export 'dart:convert';
+export 'package:share/share.dart';
 
 /// Screens
 export 'package:solo_social/screens/post_feed.dart';

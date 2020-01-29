@@ -29,6 +29,7 @@ class _PostCardState extends State<PostCard> {
       case 'GoToSource':
         break;
       case 'Share':
+        Share.share(widget.postText, subject: 'Check out my post from SoloSocial');
         break;
       case 'Delete':
         final CollectionReference _posts = Firestore.instance.collection('Users').document(widget.user.uid).collection('Posts');
