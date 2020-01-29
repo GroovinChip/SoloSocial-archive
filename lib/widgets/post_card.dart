@@ -1,7 +1,9 @@
 import 'package:solo_social/library.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class PostCard extends StatefulWidget {
   final FirebaseUser user;
+  final DateTime timeCreated;
   final String postId;
   final String username;
   final String postText;
@@ -10,6 +12,7 @@ class PostCard extends StatefulWidget {
   const PostCard({
     Key key,
     this.user,
+    this.timeCreated,
     this.postId,
     this.username,
     this.postText,
@@ -57,7 +60,7 @@ class _PostCardState extends State<PostCard> {
               ),
             ),
             subtitle: Text(
-              '2 min ago', //todo: use timeago package to determine
+              timeago.format(widget.timeCreated),
               style: TextStyle(
                 color: Colors.white,
               ),

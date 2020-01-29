@@ -61,8 +61,10 @@ class _PostFeedState extends State<PostFeed> {
                           if (_post['Tags'] != null) {
                             _tags = (jsonDecode(_post['Tags']) as List).cast<String>();
                           }
+                          DateTime _timeCreated = DateTime.parse(_post['TimeCreated']);
                           return PostCard(
                             user: _user,
+                            timeCreated: _timeCreated,
                             postId: _post.documentID,
                             username: _post['Username'],
                             postText: _post['PostText'],
