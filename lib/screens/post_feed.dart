@@ -69,6 +69,7 @@ class _PostFeedState extends State<PostFeed> {
                             username: _post['Username'],
                             postText: _post['PostText'],
                             tags: _tags == null || _tags.length == 0 ? [] : _tags,
+                            sourceLink: _post['SourceLink'] == null ? 'NoSource' : _post['SourceLink'],
                           );
                         },
                       );
