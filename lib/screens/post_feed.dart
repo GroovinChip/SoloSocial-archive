@@ -55,6 +55,7 @@ class _PostFeedState extends State<PostFeed> {
                     } else {
                       return ListView.builder(
                         itemCount: _posts.length,
+                        padding: EdgeInsets.only(right: 8, left: 8),
                         itemBuilder: (context, index) {
                           final _post = _posts[index];
                           var _tags;
