@@ -8,14 +8,14 @@ class ComposePost extends StatefulWidget {
 class _ComposePostState extends State<ComposePost> {
   TextEditingController _postTextController = TextEditingController();
   TextEditingController _sourceLinkController = TextEditingController();
+  TextEditingController _addTagController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final List<String> _tags = [];
-  bool _postTagSelected = false;
-  bool _commentTagSelected = false;
-  bool _facebookTagSelected = false;
-  bool _instagramTagSelected = false;
-  bool _twitterTagSelected = false;
-  bool _redditTagSelected = false;
+  List<String> _tags = [];
+  List<String> _options = [
+    'Post', 'Comment', 'Facebook',
+    'Instagram', 'Twitter', 'Reddit',
+    'Snapchat',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -106,159 +106,43 @@ class _ComposePostState extends State<ComposePost> {
                       ],
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        ChoiceChip(
-                          avatar: Icon(Icons.add),
-                          label: Text('Add Your Own'),
-                          selected: false,
-                          onSelected: (value) {},
-                        ),
-                        ChoiceChip(
-                          label: Text('Post'),
-                          selected: _postTagSelected,
-                          selectedColor: Theme.of(context).accentColor,
-                          labelStyle: TextStyle(
+                        SizedBox(width: 30),
+                        Text(
+                          'Tags',
+                          style: TextStyle(
                             color: Colors.white,
+                            fontWeight: FontWeight.bold,
                           ),
-                          onSelected: (value) {
-                            if (value == true) {
-                              setState(() {
-                                _tags.add('Post');
-                                _postTagSelected = true;
-                                print(_tags);
-                              });
-                            } else {
-                              setState(() {
-                                _postTagSelected = false;
-                                _tags.remove('Post');
-                              });
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          label: Text('Comment'),
-                          selected: _commentTagSelected,
-                          selectedColor: Theme.of(context).accentColor,
-                          labelStyle: TextStyle(
-                            color: Colors.white,
-                          ),
-                          onSelected: (value) {
-                            if (value == true) {
-                              setState(() {
-                                _tags.add('Comment');
-                                _commentTagSelected = true;
-                                print(_tags);
-                              });
-                            } else {
-                              setState(() {
-                                _commentTagSelected = false;
-                                _tags.remove('Comment');
-                              });
-                            }
-                          },
                         ),
                       ],
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        ChoiceChip(
-                          label: Text('Facebook'),
-                          selected: _facebookTagSelected,
-                          selectedColor: Theme.of(context).accentColor,
-                          labelStyle: TextStyle(
-                            color: Colors.white,
-                          ),
-                          onSelected: (value) {
-                            if (value == true) {
-                              setState(() {
-                                _tags.add('Facebook');
-                                _facebookTagSelected = true;
-                                print(_tags);
-                              });
-                            } else {
-                              setState(() {
-                                _facebookTagSelected = false;
-                                _tags.remove('Facebook');
-                              });
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          label: Text('Instagram'),
-                          selected: _instagramTagSelected,
-                          selectedColor: Theme.of(context).accentColor,
-                          labelStyle: TextStyle(
-                            color: Colors.white,
-                          ),
-                          onSelected: (value) {
-                            if (value == true) {
-                              setState(() {
-                                _tags.add('Instagram');
-                                _instagramTagSelected = true;
-                                print(_tags);
-                              });
-                            } else {
-                              setState(() {
-                                _instagramTagSelected = false;
-                                _tags.remove('Instagram');
-                              });
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          label: Text('Twitter'),
-                          selected: _twitterTagSelected,
-                          selectedColor: Theme.of(context).accentColor,
-                          labelStyle: TextStyle(
-                            color: Colors.white,
-                          ),
-                          onSelected: (value) {
-                            if (value == true) {
-                              setState(() {
-                                _tags.add('Twitter');
-                                _twitterTagSelected = true;
-                                print(_tags);
-                              });
-                            } else {
-                              setState(() {
-                                _twitterTagSelected = false;
-                                _tags.remove('Twitter');
-                              });
-                            }
-                          },
-                        ),
-                        ChoiceChip(
-                          label: Text('Reddit'),
-                          selected: _redditTagSelected,
-                          selectedColor: Theme.of(context).accentColor,
-                          labelStyle: TextStyle(
-                            color: Colors.white,
-                          ),
-                          onSelected: (value) {
-                            if (value == true) {
-                              setState(() {
-                                _tags.add('Reddit');
-                                _redditTagSelected = true;
-                                print(_tags);
-                              });
-                            } else {
-                              setState(() {
-                                _redditTagSelected = false;
-                                _tags.remove('Reddit');
-                              });
-                            }
-                          },
-                        ),
-                      ],
+                    ChipsChoice<String>.multiple(
+                      value: _tags,
+                      itemConfig: ChipsChoiceItemConfig(
+                        selectedColor: Colors.white,
+                        //unselectedColor: Theme.of(context).primaryColor,
+                      ),
+                      options: ChipsChoiceOption.listFrom<String, String>(
+                        source: _options,
+                        value: (i, v) => v,
+                        label: (i, v) => v,
+                      ),
+                      onChanged: (val) => setState(() => _tags = val),
+                      isWrapped: true,
                     ),
-                    SizedBox(height: 16,),
                     Row(
                       children: <Widget>[
-                        FlatButton.icon(
-                          icon: Icon(Icons.attach_file),
-                          label: Text('Attachments'),
+                        SizedBox(width: 18),
+                        OutlineButton.icon(
+                          label: Text('Add Tag'),
+                          icon: Icon(MdiIcons.tagPlusOutline),
+                          borderSide: BorderSide(
+                            color: Colors.grey[400],
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
                           onPressed: () => showDialog(
                             context: context,
                             builder: (_) => Theme(
@@ -267,39 +151,34 @@ class _ComposePostState extends State<ComposePost> {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                                 backgroundColor: Theme.of(context).canvasColor,
                                 title: Text(
-                                  'Attachments',
+                                  'New Tag',
                                   style: GoogleFonts.openSans(),
                                 ),
                                 contentPadding: EdgeInsets.all(16),
                                 children: <Widget>[
                                   TextField(
-                                    controller: _sourceLinkController,
+                                    controller: _addTagController,
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Theme.of(context).primaryColor,
-                                      hintText: 'Source link',
+                                      hintText: 'Tag Name',
                                       border: InputBorder.none,
                                     ),
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      FlatButton.icon(
-                                        icon: Icon(Icons.image),
-                                        label: Text('Screenshot(s)'),
-                                        onPressed: () {},
-                                      ),
-                                    ],
                                   ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: <Widget>[
                                       ChoiceChip(
-                                        label: Text('Finish'),
+                                        label: Text('Complete'),
                                         backgroundColor: Theme.of(context).accentColor,
                                         selected: false,
                                         onSelected: (value) {
-                                          //todo: consider auto-adding tags to indicate attachments
-                                          Navigator.pop(context);
+                                          if (value == true && _addTagController.text.isNotEmpty) {
+                                            setState(() {
+                                              _options.add(_addTagController.text);
+                                            });
+                                            Navigator.pop(context);
+                                          }
                                         },
                                       ),
                                     ],
@@ -309,6 +188,26 @@ class _ComposePostState extends State<ComposePost> {
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                    SizedBox(height: 16),
+                    Row(
+                      children: <Widget>[
+                        SizedBox(width: 30),
+                        Text(
+                          'Other',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: <Widget>[
+                        SizedBox(width: 18),
+                        AttachmentsButton(sourceLinkController: _sourceLinkController),
                       ],
                     ),
                   ],
@@ -371,5 +270,77 @@ class _ComposePostState extends State<ComposePost> {
       'Tags':jsonEncode(_tags),
       'SourceLink':_sourceLinkController.text,
     });
+  }
+}
+
+class AttachmentsButton extends StatelessWidget {
+  const AttachmentsButton({
+    Key key,
+    @required TextEditingController sourceLinkController,
+  }) : _sourceLinkController = sourceLinkController, super(key: key);
+
+  final TextEditingController _sourceLinkController;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlineButton.icon(
+      icon: Icon(Icons.attach_file),
+      label: Text('Attachments'),
+      borderSide: BorderSide(
+        color: Colors.grey[400],
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+      ),
+      onPressed: () => showDialog(
+        context: context,
+        builder: (_) => Theme(
+          data: ThemeData.dark(),
+          child: SimpleDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+            backgroundColor: Theme.of(context).canvasColor,
+            title: Text(
+              'Attachments',
+              style: GoogleFonts.openSans(),
+            ),
+            contentPadding: EdgeInsets.all(16),
+            children: <Widget>[
+              TextField(
+                controller: _sourceLinkController,
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Theme.of(context).primaryColor,
+                  hintText: 'Source link',
+                  border: InputBorder.none,
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  FlatButton.icon(
+                    icon: Icon(Icons.image),
+                    label: Text('Screenshot(s)'),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  ChoiceChip(
+                    label: Text('Complete'),
+                    backgroundColor: Theme.of(context).accentColor,
+                    selected: false,
+                    onSelected: (value) {
+                      //todo: consider auto-adding tags to indicate attachments
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
