@@ -117,19 +117,26 @@ class _ComposePostState extends State<ComposePost> {
                         ),
                       ],
                     ),
-                    ChipsChoice<String>.multiple(
-                      value: _tags,
-                      itemConfig: ChipsChoiceItemConfig(
-                        selectedColor: Colors.white,
-                        //unselectedColor: Theme.of(context).primaryColor,
-                      ),
-                      options: ChipsChoiceOption.listFrom<String, String>(
-                        source: _options,
-                        value: (i, v) => v,
-                        label: (i, v) => v,
-                      ),
-                      onChanged: (val) => setState(() => _tags = val),
-                      isWrapped: true,
+                    Row(
+                      children: <Widget>[
+                        SizedBox(width: 3),
+                        Expanded(
+                          child: ChipsChoice<String>.multiple(
+                            value: _tags,
+                            itemConfig: ChipsChoiceItemConfig(
+                              selectedColor: Colors.white,
+                              //unselectedColor: Theme.of(context).primaryColor,
+                            ),
+                            options: ChipsChoiceOption.listFrom<String, String>(
+                              source: _options,
+                              value: (i, v) => v,
+                              label: (i, v) => v,
+                            ),
+                            onChanged: (val) => setState(() => _tags = val),
+                            isWrapped: true,
+                          ),
+                        ),
+                      ],
                     ),
                     Row(
                       children: <Widget>[
