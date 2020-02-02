@@ -63,6 +63,7 @@ class _PostFeedState extends State<PostFeed> {
                             _tags = (jsonDecode(_post['Tags']) as List).cast<String>();
                           }
                           DateTime _timeCreated = DateTime.parse(_post['TimeCreated']);
+
                           return PostCard(
                             user: _user,
                             timeCreated: _timeCreated,
@@ -70,7 +71,7 @@ class _PostFeedState extends State<PostFeed> {
                             username: _post['Username'],
                             postText: _post['PostText'],
                             tags: _tags == null || _tags.length == 0 ? [] : _tags,
-                            sourceLink: _post['SourceLink'] == null ? 'NoSource' : _post['SourceLink'],
+                            sourceLink: _post['SourceLink'].toString().isEmpty ? 'NoSource' : _post['SourceLink'],
                           );
                         },
                       );
@@ -100,13 +101,13 @@ class _PostFeedState extends State<PostFeed> {
                           builder: (_) => MainMenuSheet(),
                         ),
                       ),
-                      IconButton(
+                      /*IconButton(
                         icon: Icon(Icons.search),
                         onPressed: () => showSearch(
                           context: context,
                           delegate: PostSearch(),
                         ),
-                      ),
+                      ),*/
                     ],
                   ),
                 ),

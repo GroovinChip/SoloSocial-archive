@@ -79,6 +79,8 @@ class _ComposePostState extends State<ComposePost> {
                         Expanded(
                           child: TextField(
                             controller: _postTextController,
+                            textCapitalization: TextCapitalization.sentences,
+                            autocorrect: true,
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -214,9 +216,79 @@ class _ComposePostState extends State<ComposePost> {
                     Row(
                       children: <Widget>[
                         SizedBox(width: 18),
-                        AttachmentsButton(sourceLinkController: _sourceLinkController),
+                        OutlineButton.icon(
+                          icon: Icon(Icons.link),
+                          label: Text('Refer to Source'),
+                          borderSide: BorderSide(
+                            color: Colors.grey[400],
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          onPressed: () => showDialog(
+                            context: context,
+                            builder: (_) => Theme(
+                              data: ThemeData.dark(),
+                              child: SimpleDialog(
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                                backgroundColor: Theme.of(context).canvasColor,
+                                title: Text(
+                                  'Source Reference',
+                                  style: GoogleFonts.openSans(),
+                                ),
+                                contentPadding: EdgeInsets.all(16),
+                                children: <Widget>[
+                                  TextField(
+                                    controller: _sourceLinkController,
+                                    keyboardType: TextInputType.url,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: Theme.of(context).primaryColor,
+                                      hintText: 'Paste link here',
+                                      border: InputBorder.none,
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: <Widget>[
+                                      ChoiceChip(
+                                        label: Text('Complete'),
+                                        backgroundColor: Theme.of(context).accentColor,
+                                        selected: false,
+                                        onSelected: (value) {
+                                          // add tag indicating source link
+                                          // ensure tag only is entered once
+                                          if (_sourceLinkController.text.isNotEmpty && !_tags.contains('Source')) {
+                                            setState(() {
+                                              _options.add('Source');
+                                              _tags.add('Source');
+                                            });
+                                          }
+
+                                          print(_tags);
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
+                    _sourceLinkController.text.isNotEmpty ? Row(
+                      children: <Widget>[
+                        SizedBox(width: 18),
+                        Text(
+                          '==> ' + _sourceLinkController.text,
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        )
+                      ],
+                    ): Container(),
                   ],
                 ),
               ),
@@ -269,85 +341,18 @@ class _ComposePostState extends State<ComposePost> {
   }
 
   /// Actually add data to Firestore
-  void _addPostToFirestore(CollectionReference _posts, FirebaseUser _user, DateTime _timeCreated) {
-    _posts.add({
-      'Username':_user.displayName,
-      'PostText':_postTextController.text,
-      'TimeCreated':_timeCreated.toIso8601String(),
-      'Tags':jsonEncode(_tags),
-      'SourceLink':_sourceLinkController.text,
-    });
-  }
-}
-
-class AttachmentsButton extends StatelessWidget {
-  const AttachmentsButton({
-    Key key,
-    @required TextEditingController sourceLinkController,
-  }) : _sourceLinkController = sourceLinkController, super(key: key);
-
-  final TextEditingController _sourceLinkController;
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlineButton.icon(
-      icon: Icon(Icons.attach_file),
-      label: Text('Attachments'),
-      borderSide: BorderSide(
-        color: Colors.grey[400],
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
-      ),
-      onPressed: () => showDialog(
-        context: context,
-        builder: (_) => Theme(
-          data: ThemeData.dark(),
-          child: SimpleDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-            backgroundColor: Theme.of(context).canvasColor,
-            title: Text(
-              'Attachments',
-              style: GoogleFonts.openSans(),
-            ),
-            contentPadding: EdgeInsets.all(16),
-            children: <Widget>[
-              TextField(
-                controller: _sourceLinkController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Theme.of(context).primaryColor,
-                  hintText: 'Source link',
-                  border: InputBorder.none,
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  FlatButton.icon(
-                    icon: Icon(Icons.image),
-                    label: Text('Screenshot(s)'),
-                    onPressed: () {},
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  ChoiceChip(
-                    label: Text('Complete'),
-                    backgroundColor: Theme.of(context).accentColor,
-                    selected: false,
-                    onSelected: (value) {
-                      //todo: consider auto-adding tags to indicate attachments
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  /// NOTE: limited to saving one image for now
+  void _addPostToFirestore(CollectionReference _posts, FirebaseUser _user, DateTime _timeCreated) async {
+    try {
+      _posts.add({
+        'Username':_user.displayName,
+        'PostText':_postTextController.text,
+        'TimeCreated':_timeCreated.toIso8601String(),
+        'Tags':jsonEncode(_tags),
+        'SourceLink':_sourceLinkController.text,
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }
