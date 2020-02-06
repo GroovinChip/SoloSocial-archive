@@ -71,7 +71,9 @@ class _AuthCheckState extends State<AuthCheck> {
           final _firstLaunch = snapshot.data;
           if (_firstLaunch == false && _user != null) {
             _userBloc.user.add(_user);
-            return PostFeed();
+            return PostFeed(
+              user: _user,
+            );
           } else if (_firstLaunch == true && _user == null) {
             return Introduction();
           } else {

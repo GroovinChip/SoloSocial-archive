@@ -347,7 +347,7 @@ class _ComposePostState extends State<ComposePost> {
       _posts.add({
         'Username':_user.displayName,
         'PostText':_postTextController.text,
-        'TimeCreated':_timeCreated.toIso8601String(),
+        'TimeCreated': Timestamp.fromDate(_timeCreated),
         'Tags':jsonEncode(_tags),
         'SourceLink':_sourceLinkController.text,
       });
