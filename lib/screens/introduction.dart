@@ -166,9 +166,17 @@ class _IntroductionState extends State<Introduction> {
                       if (_users.document(user.uid).path.isEmpty) {
                         await _users.document(user.uid).setData({});
                       }
+                      try {
+                        await Directory('/storage/emulated/0/SoloSocial').create();
+                        print('App directory created');
+                      } catch (e) {
+                        print('Error creating app directory');
+                      }
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                          builder: (context) => PostFeed(),
+                          builder: (context) => PostFeed(
+                            user: user,
+                          ),
                         ),
                             (route) => false,
                       );
