@@ -143,7 +143,18 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
               leading: Icon(Icons.delete_outline),
               title: Text('Delete All Posts'),
               onTap: () async {
+                CollectionReference _postsRef = Firestore.instance.collection('Users').document(widget.user.uid).collection('Posts');
+                QuerySnapshot _posts = await _postsRef.getDocuments();
 
+                if (_posts.documents.length > 0) {
+                  for (int i = 0; i < _posts.documents.length; i++) {
+                    DocumentReference _postRef = _posts.documents[i].reference;
+                    _postRef.delete();
+                  }
+                  Navigator.pop(context);
+                } else {
+                  //todo: snackbar?
+                }
               },
             ),
             /*ListTile(
