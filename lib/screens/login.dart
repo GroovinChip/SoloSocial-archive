@@ -41,24 +41,23 @@ class _LoginState extends State<Login> {
             SignInButton(
               Buttons.Google,
               onPressed: () async {
-                try {
-                  _handleSignIn().then((FirebaseUser user) async {
-                    _userBloc.user.add(user);
-                    if (_users.document(user.uid).path.isEmpty) {
-                      await _users.document(user.uid).setData({});
-                    }
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => PostFeed(
-                          user: user,
-                        ),
+                _handleSignIn().then((FirebaseUser user) async {
+                  _userBloc.user.add(user);
+                  if (_users.document(user.uid).path.isEmpty) {
+                    await _users.document(user.uid).setData({});
+                  }
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => PostFeed(
+                        user: user,
                       ),
-                          (route) => false,
-                    );
-                  }).catchError((e) => print('GoogleAuth error: $e'));
-                } catch (error, stacktrace) {
-                  await _sentry.captureException(exception: error, stackTrace: stacktrace);
-                }
+                    ),
+                        (route) => false,
+                  );
+                }).catchError((exc) async {
+                  print('GoogleAuth error: $exc');
+                  await _sentry.captureException(exception: exc);
+                });
               },
             ),
           ],
