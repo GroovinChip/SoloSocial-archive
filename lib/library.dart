@@ -19,6 +19,12 @@ export 'package:chips_choice/chips_choice.dart';
 export 'dart:async';
 export 'package:flutter/services.dart';
 export 'dart:io';
+export 'package:path_provider/path_provider.dart';
+export 'package:intl/intl.dart' hide TextDirection;
+export 'package:share_extend/share_extend.dart';
+//export 'package:file/file.dart';
+//export 'package:file/memory.dart';
+export 'package:path_provider_ex/path_provider_ex.dart';
 
 /// Screens
 export 'package:solo_social/screens/post_feed.dart';
