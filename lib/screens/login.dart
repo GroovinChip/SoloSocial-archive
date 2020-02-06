@@ -49,7 +49,9 @@ class _LoginState extends State<Login> {
                     }
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                        builder: (context) => PostFeed(),
+                        builder: (context) => PostFeed(
+                          user: user,
+                        ),
                       ),
                           (route) => false,
                     );
