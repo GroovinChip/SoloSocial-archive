@@ -1,7 +1,7 @@
 name: solo_social
 description: SoloSocial.
 
-version: 0.0.18
+version: 0.0.19
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -31,7 +31,6 @@ dependencies:
   path_provider: ^1.6.0
   intl: ^0.16.1
   share_extend: ^1.1.1
-
   file: ^5.1.0
   path_provider_ex: ^1.0.1
   csv: ^4.0.3
