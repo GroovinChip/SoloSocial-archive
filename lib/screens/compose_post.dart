@@ -85,21 +85,7 @@ class _ComposePostState extends State<ComposePost> {
                               color: Colors.white,
                             ),
                             decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14),
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14),
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                              ),
                               hintText: 'What\'s on your mind?',
-                              filled: true,
-                              fillColor: Theme.of(context).primaryColor,
                             ),
                             maxLines: 5,
                             maxLength: 256,
@@ -169,10 +155,11 @@ class _ComposePostState extends State<ComposePost> {
                                     controller: _addTagController,
                                     textCapitalization: TextCapitalization.sentences,
                                     decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Theme.of(context).primaryColor,
                                       hintText: 'Tag Name',
-                                      border: InputBorder.none,
+                                      enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
+                                      focusedBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
+                                      fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+                                      filled: Theme.of(context).inputDecorationTheme.filled,
                                     ),
                                   ),
                                   Row(
@@ -243,21 +230,11 @@ class _ComposePostState extends State<ComposePost> {
                                     controller: _sourceLinkController,
                                     keyboardType: TextInputType.url,
                                     decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: Theme.of(context).primaryColor,
                                       hintText: 'Paste link here',
-                                      enabledBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(14),
-                                        borderSide: BorderSide(
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                      ),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(14),
-                                        borderSide: BorderSide(
-                                          color: Theme.of(context).primaryColor,
-                                        ),
-                                      ),
+                                      enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
+                                      focusedBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
+                                      fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+                                      filled: Theme.of(context).inputDecorationTheme.filled,
                                     ),
                                   ),
                                   Row(

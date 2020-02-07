@@ -25,6 +25,22 @@ class SoloSocialApp extends StatelessWidget {
             Theme.of(context).textTheme,
           ),
           textSelectionHandleColor: Colors.indigoAccent,
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: BorderSide(
+                color: Colors.indigo,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(14),
+              borderSide: BorderSide(
+                color: Colors.indigo,
+              ),
+            ),
+            filled: true,
+            fillColor: Colors.indigo,
+          ),
         ),
         home: AuthCheck(),
         debugShowCheckedModeBanner: false,
