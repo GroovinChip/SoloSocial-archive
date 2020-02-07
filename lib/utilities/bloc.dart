@@ -1,6 +1,6 @@
 import 'package:solo_social/library.dart';
 
-class UserBloc {
+class Bloc {
   /// Controllers
   final _userController = BehaviorSubject<FirebaseUser>();
   final _firstLaunchController = BehaviorSubject<bool>();

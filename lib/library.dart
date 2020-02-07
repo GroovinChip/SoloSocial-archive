@@ -22,9 +22,8 @@ export 'dart:io';
 export 'package:path_provider/path_provider.dart';
 export 'package:intl/intl.dart' hide TextDirection;
 export 'package:share_extend/share_extend.dart';
-//export 'package:file/file.dart';
-//export 'package:file/memory.dart';
 export 'package:path_provider_ex/path_provider_ex.dart';
+export 'package:package_info/package_info.dart';
 
 /// Screens
 export 'package:solo_social/screens/post_feed.dart';
@@ -42,4 +41,4 @@ export 'package:solo_social/widgets/compose_fab.dart';
 
 /// Utilities
 export 'package:solo_social/utilities/auth_check.dart';
-export 'package:solo_social/utilities/user_bloc.dart';
+export 'package:solo_social/utilities/bloc.dart';

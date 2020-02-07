@@ -1,7 +1,7 @@
 name: solo_social
 description: SoloSocial.
 
-version: 0.0.24
+version: 0.0.25
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -34,6 +34,7 @@ dependencies:
   file: ^5.1.0
   path_provider_ex: ^1.0.1
   csv: ^4.0.3
+  package_info: ^0.4.0+13
 
 dev_dependencies:
   flutter_test:
