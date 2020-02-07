@@ -1,7 +1,10 @@
 import 'package:solo_social/library.dart';
 import 'package:sentry/sentry.dart';
 
-void main() => runApp(SoloSocialApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(SoloSocialApp());
+}
 
 class SoloSocialApp extends StatefulWidget {
   @override
@@ -9,7 +12,8 @@ class SoloSocialApp extends StatefulWidget {
 }
 
 class _SoloSocialAppState extends State<SoloSocialApp> {
-  final sentry = SentryClient(dsn: 'https://9dfb88b691594bfbbbf1bf5fe33a751a@sentry.io/2043262');
+  RemoteConfig _remoteConfig;
+  SentryClient sentry;
 
   PackageInfo _packageInfo;
   String appName;
@@ -26,8 +30,21 @@ class _SoloSocialAppState extends State<SoloSocialApp> {
     buildNumber = _packageInfo.buildNumber;
   }
 
+  /// Initialize Remote Config
+  void _initRemoteConfig() async {
+    _remoteConfig = await RemoteConfig.instance.catchError((error) {
+      print(error);
+    });
+
+    await _remoteConfig.fetch(expiration: const Duration(seconds: 0));
+    await _remoteConfig.activateFetched();
+
+    sentry = SentryClient(dsn: _remoteConfig.getString('SentryDsn'));
+  }
+
   @override
   void initState() {
+    _initRemoteConfig();
     _getPackageInfo();
     super.initState();
   }
