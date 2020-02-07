@@ -167,6 +167,7 @@ class _ComposePostState extends State<ComposePost> {
                                 children: <Widget>[
                                   TextField(
                                     controller: _addTagController,
+                                    textCapitalization: TextCapitalization.sentences,
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: Theme.of(context).primaryColor,
