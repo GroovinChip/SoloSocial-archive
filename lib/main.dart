@@ -24,6 +24,7 @@ class SoloSocialApp extends StatelessWidget {
           textTheme: GoogleFonts.openSansTextTheme(
             Theme.of(context).textTheme,
           ),
+          textSelectionHandleColor: Colors.indigoAccent,
         ),
         home: AuthCheck(),
         debugShowCheckedModeBanner: false,
