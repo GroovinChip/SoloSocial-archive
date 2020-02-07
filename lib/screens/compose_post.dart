@@ -253,8 +253,6 @@ class _ComposePostState extends State<ComposePost> {
                                               _tags.add('Source');
                                             });
                                           }
-
-                                          print(_tags);
                                           Navigator.pop(context);
                                         },
                                       ),
