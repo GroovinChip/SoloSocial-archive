@@ -19,7 +19,7 @@ class _ComposePostState extends State<ComposePost> {
 
   @override
   Widget build(BuildContext context) {
-    final _userBloc = Provider.of<UserBloc>(context);
+    final _userBloc = Provider.of<Bloc>(context);
     return StreamBuilder<FirebaseUser>(
       stream: _userBloc.currentUser,
       builder: (context, snapshot) {

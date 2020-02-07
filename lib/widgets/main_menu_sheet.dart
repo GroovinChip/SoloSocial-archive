@@ -83,6 +83,7 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final _packageInfo = Provider.of<PackageInfo>(context);
     return Theme(
       data: ThemeData.dark(),
       child: Container(
@@ -158,14 +159,15 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
                 }
               },
             ),
+            Divider(height: 0),
+            ListTile(
+              leading: Icon(MdiIcons.informationVariant),
+              title: Text(_packageInfo.appName),
+              subtitle: Text('Version ' + _packageInfo.version),
+            ),
             /*ListTile(
               leading: Icon(Icons.alternate_email),
               title: Text('Contact Developer'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.info_outline),
-              title: Text('App Info'),
               onTap: () {},
             ),*/
           ],

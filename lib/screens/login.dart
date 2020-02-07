@@ -31,7 +31,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    final _userBloc = Provider.of<UserBloc>(context);
+    final _userBloc = Provider.of<Bloc>(context);
     final _sentry = Provider.of<SentryClient>(context);
     return Scaffold(
       body: Center(

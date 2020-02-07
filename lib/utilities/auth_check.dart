@@ -28,7 +28,7 @@ class _AuthCheckState extends State<AuthCheck> {
 
   @override
   Widget build(BuildContext context) {
-    final _userBloc = Provider.of<UserBloc>(context);
+    final _userBloc = Provider.of<Bloc>(context);
     /// Check for first launch; is true by default
     void _checkForFirstLaunch() async {
       try {
