@@ -245,7 +245,18 @@ class _ComposePostState extends State<ComposePost> {
                                       filled: true,
                                       fillColor: Theme.of(context).primaryColor,
                                       hintText: 'Paste link here',
-                                      border: InputBorder.none,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   Row(
@@ -341,7 +352,6 @@ class _ComposePostState extends State<ComposePost> {
   }
 
   /// Actually add data to Firestore
-  /// NOTE: limited to saving one image for now
   void _addPostToFirestore(CollectionReference _posts, FirebaseUser _user, DateTime _timeCreated) async {
     try {
       _posts.add({
