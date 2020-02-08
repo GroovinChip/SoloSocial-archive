@@ -14,6 +14,8 @@ class SoloSocialApp extends StatefulWidget {
 class _SoloSocialAppState extends State<SoloSocialApp> {
   RemoteConfig _remoteConfig;
   SentryClient sentry;
+  String snapfeedProjectId;
+  String snapfeedSecret;
 
   PackageInfo _packageInfo;
   String appName;
@@ -39,13 +41,17 @@ class _SoloSocialAppState extends State<SoloSocialApp> {
     await _remoteConfig.fetch(expiration: const Duration(seconds: 0));
     await _remoteConfig.activateFetched();
 
-    sentry = SentryClient(dsn: _remoteConfig.getString('SentryDsn'));
+    setState(() {
+      sentry = SentryClient(dsn: _remoteConfig.getString('SentryDsn'));
+      snapfeedProjectId = _remoteConfig.getString('SnapfeedProjectId');
+      snapfeedSecret = _remoteConfig.getString('SnapfeedSecret');
+    });
   }
 
   @override
   void initState() {
-    _initRemoteConfig();
     _getPackageInfo();
+    _initRemoteConfig();
     super.initState();
   }
 
@@ -53,41 +59,45 @@ class _SoloSocialAppState extends State<SoloSocialApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<Bloc>(create: (_) => Bloc(),),
+        Provider<Bloc>(create: (_) => Bloc()),
         Provider<SentryClient>(create: (_) => sentry),
         Provider<PackageInfo>(create: (_) => _packageInfo),
       ],
-      child: MaterialApp(
-        title: 'SoloSocial',
-        theme: ThemeData(
-          primarySwatch: Colors.indigo,
-          primaryColor: Colors.indigo,
-          accentColor: Colors.indigoAccent,
-          brightness: Brightness.dark,
-          canvasColor: Colors.indigo[800],
-          textTheme: GoogleFonts.openSansTextTheme(
-            Theme.of(context).textTheme,
-          ),
-          textSelectionHandleColor: Colors.indigoAccent,
-          inputDecorationTheme: InputDecorationTheme(
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(
-                color: Colors.indigo,
-              ),
+      child: Snapfeed(
+        projectId: snapfeedProjectId,
+        secret: snapfeedSecret,
+        child: MaterialApp(
+          title: 'SoloSocial',
+          theme: ThemeData(
+            primarySwatch: Colors.indigo,
+            primaryColor: Colors.indigo,
+            accentColor: Colors.indigoAccent,
+            brightness: Brightness.dark,
+            canvasColor: Colors.indigo[800],
+            textTheme: GoogleFonts.openSansTextTheme(
+              Theme.of(context).textTheme,
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(
-                color: Colors.indigo,
+            textSelectionHandleColor: Colors.indigoAccent,
+            inputDecorationTheme: InputDecorationTheme(
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(
+                  color: Colors.indigo,
+                ),
               ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(
+                  color: Colors.indigo,
+                ),
+              ),
+              filled: true,
+              fillColor: Colors.indigo,
             ),
-            filled: true,
-            fillColor: Colors.indigo,
           ),
+          home: AuthCheck(),
+          debugShowCheckedModeBanner: false,
         ),
-        home: AuthCheck(),
-        debugShowCheckedModeBanner: false,
       ),
     );
   }

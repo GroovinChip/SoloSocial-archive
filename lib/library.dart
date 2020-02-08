@@ -25,6 +25,7 @@ export 'package:share_extend/share_extend.dart';
 export 'package:path_provider_ex/path_provider_ex.dart';
 export 'package:package_info/package_info.dart';
 export 'package:firebase_remote_config/firebase_remote_config.dart';
+export 'package:snapfeed/snapfeed.dart';
 
 /// Screens
 export 'package:solo_social/screens/post_feed.dart';
