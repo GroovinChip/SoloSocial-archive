@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:sentry/sentry.dart';
 import 'package:solo_social/library.dart';
 import 'package:solo_social/utilities/firestore_control.dart';
+import 'package:solo_social/utilities/google_auth.dart';
 
-import 'post_feed.dart';
+import 'package:solo_social/screens/post_feed.dart';
 
 class Introduction extends StatefulWidget {
   @override
@@ -12,27 +13,7 @@ class Introduction extends StatefulWidget {
 
 class _IntroductionState extends State<Introduction> {
   SharedPreferences _prefs;
-
-  /// Firebase related initializations
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  /// Sign in with Google Auth
-  Future<FirebaseUser> _handleSignIn() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
-    UserUpdateInfo _userUpdateInfo = UserUpdateInfo();
-    _userUpdateInfo.photoUrl = googleUser.photoUrl;
-    _userUpdateInfo.displayName = googleUser.displayName;
-    user.updateProfile(_userUpdateInfo);
-    return user;
-  }
+  final GoogleAuth _googleAuth = GoogleAuth();
 
   void _setFirstLaunchFlag() async {
     _prefs = await SharedPreferences.getInstance();
@@ -159,7 +140,7 @@ class _IntroductionState extends State<Introduction> {
               bodyWidget: SignInButton(
                 Buttons.Google,
                 onPressed: () async {
-                  _handleSignIn().then((FirebaseUser user) async {
+                  _googleAuth.handleSignIn().then((FirebaseUser user) async {
                     _setFirstLaunchFlag();
                     _userBloc.user.add(user);
                     final _firestoreControl = FirestoreControl(user.uid);
