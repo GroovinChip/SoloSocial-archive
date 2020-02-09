@@ -1,4 +1,5 @@
 import 'package:sentry/sentry.dart';
+import 'package:solo_social/widgets/delete_all_posts_dialog.dart';
 import 'package:solo_social/library.dart';
 import 'package:path/path.dart' as p;
 import 'package:csv/csv.dart' as csv;
@@ -7,9 +8,11 @@ import 'package:solo_social/utilities/firestore_control.dart';
 // ignore: must_be_immutable
 class MainMenuSheet extends StatefulWidget {
   final FirebaseUser user;
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   MainMenuSheet({
     @required this.user,
+    this.scaffoldKey,
   });
 
   @override
@@ -53,7 +56,7 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
     ];
 
     // Add post record to data
-    for(final DocumentSnapshot post in posts.documents) {
+    for (final DocumentSnapshot post in posts.documents) {
       data.add([
         post['Username'],
         dateFormat.format((post['TimeCreated'] as Timestamp).toDate()),
@@ -87,7 +90,10 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
   Widget build(BuildContext context) {
     final _packageInfo = Provider.of<PackageInfo>(context);
     final _sentry = Provider.of<SentryClient>(context);
-    final _firestoreControl = FirestoreControl(widget.user.uid);
+    final _firestoreControl = FirestoreControl(
+      userId: widget.user.uid,
+      context: context,
+    );
     _firestoreControl.getPosts();
     return Theme(
       data: ThemeData.dark(),
@@ -98,9 +104,9 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
             Padding(
               padding: const EdgeInsets.all(8),
               child: ModalDrawerHandle(
-                /*handleWidth: 50,
+                  /*handleWidth: 50,
                 handleHeight: 2,*/
-              ),
+                  ),
             ),
             ListTile(
               leading: CircleAvatar(
@@ -113,9 +119,7 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
                 borderSide: BorderSide(
                   color: Colors.white,
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25)
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
                 child: Text('Sign Out'),
                 onPressed: () {
                   _auth.signOut();
@@ -151,17 +155,28 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
               leading: Icon(Icons.delete_outline),
               title: Text('Delete All Posts'),
               onTap: () async {
-                //todo: add prompt asking user if they really want to delete all
+                Navigator.pop(context);
                 QuerySnapshot _posts = await _firestoreControl.posts.getDocuments();
-
-                if (_posts.documents.length > 0) {
-                  for (int i = 0; i < _posts.documents.length; i++) {
-                    DocumentReference _postRef = _posts.documents[i].reference;
-                    _postRef.delete();
-                  }
-                  Navigator.pop(context);
+                if (_posts.documents.length == 0) {
+                  widget.scaffoldKey.currentState.showSnackBar(SnackBar(
+                    backgroundColor: Theme.of(context).accentColor,
+                    content: Text(
+                      'There are no posts to delete',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                  ));
                 } else {
-                  //todo: snackbar?
+                  showDialog(
+                    context: context,
+                    builder: (_) => DeleteAllPostsDialog(
+                      firestoreControl: _firestoreControl,
+                      posts: _posts,
+                    ),
+                  );
                 }
               },
             ),

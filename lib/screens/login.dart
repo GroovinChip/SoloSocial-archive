@@ -25,7 +25,10 @@ class _LoginState extends State<Login> {
               onPressed: () async {
                 _googleAuth.handleSignIn().then((FirebaseUser user) async {
                   _userBloc.user.add(user);
-                  final _firestoreControl = FirestoreControl(user.uid);
+                  final _firestoreControl = FirestoreControl(
+                    userId: user.uid,
+                    context: context,
+                  );
                   _firestoreControl.getPosts();
                   if (_firestoreControl.posts.document(user.uid).path.isEmpty) {
                     await _firestoreControl.posts.document(user.uid).setData({});

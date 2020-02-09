@@ -14,11 +14,16 @@ class PostFeed extends StatefulWidget {
 }
 
 class _PostFeedState extends State<PostFeed> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    final _firestoreControl = FirestoreControl(widget.user.uid);
+    final _firestoreControl = FirestoreControl(
+      userId: widget.user.uid,
+      context: context,
+    );
     _firestoreControl.getPosts();
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Theme.of(context).canvasColor,
@@ -95,6 +100,7 @@ class _PostFeedState extends State<PostFeed> {
                   backgroundColor: Theme.of(context).canvasColor,
                   builder: (_) => MainMenuSheet(
                     user: widget.user,
+                    scaffoldKey: _scaffoldKey,
                   ),
                 ),
               ),
