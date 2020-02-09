@@ -30,7 +30,10 @@ class _ComposePostState extends State<ComposePost> {
           );
         } else {
           final _user = snapshot.data;
-          final _firestoreControl = FirestoreControl(_user.uid);
+          final _firestoreControl = FirestoreControl(
+            userId: _user.uid,
+            context: context,
+          );
           _firestoreControl.getPosts();
           return Scaffold(
             key: _scaffoldKey,

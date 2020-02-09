@@ -143,7 +143,10 @@ class _IntroductionState extends State<Introduction> {
                   _googleAuth.handleSignIn().then((FirebaseUser user) async {
                     _setFirstLaunchFlag();
                     _userBloc.user.add(user);
-                    final _firestoreControl = FirestoreControl(user.uid);
+                    final _firestoreControl = FirestoreControl(
+                      userId: user.uid,
+                      context: context,
+                    );
                     _firestoreControl.getPosts();
                     if (_firestoreControl.users.document(user.uid).path.isEmpty) {
                       await _firestoreControl.users.document(user.uid).setData({});
