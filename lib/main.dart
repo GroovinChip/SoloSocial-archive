@@ -1,7 +1,7 @@
 import 'package:solo_social/library.dart';
 import 'package:sentry/sentry.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(SoloSocialApp());
 }
@@ -38,6 +38,7 @@ class _SoloSocialAppState extends State<SoloSocialApp> {
       print(error);
     });
 
+    _remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
     await _remoteConfig.fetch(expiration: const Duration(seconds: 0));
     await _remoteConfig.activateFetched();
 
