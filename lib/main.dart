@@ -1,5 +1,6 @@
 import 'package:solo_social/library.dart';
 import 'package:sentry/sentry.dart';
+import 'package:solo_social/utilities/api_keys.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,8 +13,7 @@ class SoloSocialApp extends StatefulWidget {
 }
 
 class _SoloSocialAppState extends State<SoloSocialApp> {
-  RemoteConfig _remoteConfig;
-  SentryClient sentry;
+  SentryClient sentry = SentryClient(dsn: ApiKeys.sentryDsn);
 
   PackageInfo _packageInfo;
   String appName;
@@ -30,21 +30,8 @@ class _SoloSocialAppState extends State<SoloSocialApp> {
     buildNumber = _packageInfo.buildNumber;
   }
 
-  /// Initialize Remote Config
-  void _initRemoteConfig() async {
-    _remoteConfig = await RemoteConfig.instance.catchError((error) {
-      print(error);
-    });
-
-    await _remoteConfig.fetch(expiration: const Duration(seconds: 0));
-    await _remoteConfig.activateFetched();
-
-    sentry = SentryClient(dsn: _remoteConfig.getString('SentryDsn'));
-  }
-
   @override
   void initState() {
-    _initRemoteConfig();
     _getPackageInfo();
     super.initState();
   }
