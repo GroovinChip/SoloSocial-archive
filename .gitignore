@@ -35,7 +35,9 @@ pubspec.lock
 lib/generated_plugin_registrant.dart
 
 # Firebase related
-/android/app/google-services.json
+android/app/google-services.json
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
+
+lib/utilities/api_keys.dart

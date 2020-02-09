@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:sentry/sentry.dart';
 import 'package:solo_social/library.dart';
 
 import '../screens/introduction.dart';
@@ -13,15 +14,6 @@ class _AuthCheckState extends State<AuthCheck> {
   bool _isFirstLaunch;
   FirebaseUser _user;
 
-  /// Check for cached user
-  void _checkForCachedUser() async {
-    try {
-      _user = await FirebaseAuth.instance.currentUser();
-    } catch(e) {
-      print(e);
-    }
-  }
-
   void wait() async {
     await Future.delayed(Duration(seconds: 2));
   }
@@ -29,6 +21,7 @@ class _AuthCheckState extends State<AuthCheck> {
   @override
   Widget build(BuildContext context) {
     final _userBloc = Provider.of<Bloc>(context);
+    final _sentry = Provider.of<SentryClient>(context);
     /// Check for first launch; is true by default
     void _checkForFirstLaunch() async {
       try {
@@ -39,6 +32,14 @@ class _AuthCheckState extends State<AuthCheck> {
         print(e);
       }
     }
+
+    /// Check for cached user
+    void _checkForCachedUser() async {
+      _user = await FirebaseAuth.instance.currentUser().catchError((error) async {
+        await _sentry.captureException(exception: error);
+      });
+    }
+
     _checkForFirstLaunch();
     _checkForCachedUser();
     return StreamBuilder<bool>(

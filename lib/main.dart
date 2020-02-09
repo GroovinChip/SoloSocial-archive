@@ -1,5 +1,6 @@
 import 'package:solo_social/library.dart';
 import 'package:sentry/sentry.dart';
+import 'package:solo_social/utilities/api_keys.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,10 +13,7 @@ class SoloSocialApp extends StatefulWidget {
 }
 
 class _SoloSocialAppState extends State<SoloSocialApp> {
-  RemoteConfig _remoteConfig;
-  SentryClient sentry;
-  String snapfeedProjectId;
-  String snapfeedSecret;
+  SentryClient sentry = SentryClient(dsn: ApiKeys.sentryDsn);
 
   PackageInfo _packageInfo;
   String appName;
@@ -32,27 +30,9 @@ class _SoloSocialAppState extends State<SoloSocialApp> {
     buildNumber = _packageInfo.buildNumber;
   }
 
-  /// Initialize Remote Config
-  void _initRemoteConfig() async {
-    _remoteConfig = await RemoteConfig.instance.catchError((error) {
-      print(error);
-    });
-
-    _remoteConfig.setConfigSettings(RemoteConfigSettings(debugMode: true));
-    await _remoteConfig.fetch(expiration: const Duration(seconds: 0));
-    await _remoteConfig.activateFetched();
-
-    setState(() {
-      sentry = SentryClient(dsn: _remoteConfig.getString('SentryDsn'));
-      snapfeedProjectId = _remoteConfig.getString('SnapfeedProjectId');
-      snapfeedSecret = _remoteConfig.getString('SnapfeedSecret');
-    });
-  }
-
   @override
   void initState() {
     _getPackageInfo();
-    _initRemoteConfig();
     super.initState();
   }
 
@@ -65,8 +45,8 @@ class _SoloSocialAppState extends State<SoloSocialApp> {
         Provider<PackageInfo>(create: (_) => _packageInfo),
       ],
       child: Snapfeed(
-        projectId: snapfeedProjectId,
-        secret: snapfeedSecret,
+        projectId: ApiKeys.snapfeedProjectId,
+        secret: ApiKeys.snapfeedSecret,
         child: MaterialApp(
           title: 'SoloSocial',
           theme: ThemeData(

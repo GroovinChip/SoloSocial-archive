@@ -1,4 +1,5 @@
 import 'package:solo_social/library.dart';
+import 'package:solo_social/utilities/firestore_control.dart';
 
 class ComposePost extends StatefulWidget {
   @override
@@ -29,7 +30,8 @@ class _ComposePostState extends State<ComposePost> {
           );
         } else {
           final _user = snapshot.data;
-          final CollectionReference _posts = Firestore.instance.collection('Users').document(_user.uid).collection('Posts');
+          final _firestoreControl = FirestoreControl(_user.uid);
+          _firestoreControl.getPosts();
           return Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
@@ -54,7 +56,7 @@ class _ComposePostState extends State<ComposePost> {
                     ),
                     backgroundColor: Theme.of(context).accentColor,
                     onSelected: (value) {
-                      _makePost(value, _posts, _user, context);
+                      _makePost(value, _firestoreControl.posts, _user, context);
                     },
                     selected: false,
                   ),

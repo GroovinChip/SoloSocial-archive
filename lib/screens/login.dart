@@ -1,5 +1,7 @@
 import 'package:sentry/sentry.dart';
 import 'package:solo_social/library.dart';
+import 'package:solo_social/utilities/firestore_control.dart';
+import 'package:solo_social/utilities/google_auth.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -7,27 +9,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  /// Firebase related initializations
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final CollectionReference _users = Firestore.instance.collection('Users');
-
-  /// Sign in with Google Auth
-  Future<FirebaseUser> _handleSignIn() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
-    UserUpdateInfo _userUpdateInfo = UserUpdateInfo();
-    _userUpdateInfo.photoUrl = googleUser.photoUrl;
-    _userUpdateInfo.displayName = googleUser.displayName;
-    user.updateProfile(_userUpdateInfo);
-    return user;
-  }
+  final GoogleAuth _googleAuth = GoogleAuth();
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +23,12 @@ class _LoginState extends State<Login> {
             SignInButton(
               Buttons.Google,
               onPressed: () async {
-                _handleSignIn().then((FirebaseUser user) async {
+                _googleAuth.handleSignIn().then((FirebaseUser user) async {
                   _userBloc.user.add(user);
-                  if (_users.document(user.uid).path.isEmpty) {
-                    await _users.document(user.uid).setData({});
+                  final _firestoreControl = FirestoreControl(user.uid);
+                  _firestoreControl.getPosts();
+                  if (_firestoreControl.posts.document(user.uid).path.isEmpty) {
+                    await _firestoreControl.posts.document(user.uid).setData({});
                   }
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
