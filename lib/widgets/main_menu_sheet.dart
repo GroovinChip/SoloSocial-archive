@@ -165,6 +165,14 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
                 }
               },
             ),
+            ListTile(
+              leading: Icon(MdiIcons.sendOutline),
+              title: Text('Send Feedback'),
+              onTap: () {
+                Navigator.pop(context);
+                Snapfeed.of(context).startFeedback();
+              },
+            ),
             Divider(height: 0),
             ListTile(
               leading: Icon(MdiIcons.informationVariant),
