@@ -4,13 +4,13 @@ class DeleteAllPostsDialog extends StatelessWidget {
   const DeleteAllPostsDialog({
     Key key,
     @required FirestoreControl firestoreControl,
-    @required QuerySnapshot posts,
+    @required List<DocumentSnapshot> posts,
   })  : _firestoreControl = firestoreControl,
         _posts = posts,
         super(key: key);
 
   final FirestoreControl _firestoreControl;
-  final QuerySnapshot _posts;
+  final List<DocumentSnapshot> _posts;
 
   @override
   Widget build(BuildContext context) {

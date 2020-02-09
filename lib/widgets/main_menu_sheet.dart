@@ -95,50 +95,53 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
       context: context,
     );
     _firestoreControl.getPosts();
-    return Theme(
-      data: ThemeData.dark(),
-      child: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: ModalDrawerHandle(
-                  /*handleWidth: 50,
+    return StreamBuilder<QuerySnapshot>(
+      stream: _firestoreControl.posts.snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          final _posts = snapshot.data.documents;
+          return Theme(
+            data: ThemeData.dark(),
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: ModalDrawerHandle(
+                      /*handleWidth: 50,
                 handleHeight: 2,*/
-                  ),
-            ),
-            ListTile(
-              leading: CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: NetworkImage(widget.user.photoUrl),
-              ),
-              title: Text(widget.user.displayName),
-              subtitle: Text(widget.user.email),
-              trailing: OutlineButton(
-                borderSide: BorderSide(
-                  color: Colors.white,
-                ),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-                child: Text('Sign Out'),
-                onPressed: () {
-                  _auth.signOut();
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => Login(),
                     ),
-                    (route) => false,
-                  );
-                },
-              ),
-            ),
-            StreamBuilder<QuerySnapshot>(
-              stream: _firestoreControl.posts.snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return CircularProgressIndicator();
-                } else {
-                  return ListTile(
+                  ),
+                  ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      backgroundImage: NetworkImage(widget.user.photoUrl),
+                    ),
+                    title: Text(widget.user.displayName),
+                    subtitle: Text(widget.user.email),
+                    trailing: OutlineButton(
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                      child: Text('Sign Out'),
+                      onPressed: () {
+                        _auth.signOut();
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => Login(),
+                          ),
+                              (route) => false,
+                        );
+                      },
+                    ),
+                  ),
+                  _posts.length > 0 ? ListTile(
                     leading: Icon(MdiIcons.cloudDownloadOutline),
                     title: Text('Download Posts'),
                     onTap: () {
@@ -147,61 +150,41 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
                       });
                       shareFile();
                     },
-                  );
-                }
-              },
+                  ) : Container(),
+                  _posts.length > 0 ? ListTile(
+                    leading: Icon(Icons.delete_outline),
+                    title: Text('Delete All Posts'),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      showDialog(
+                        context: context,
+                        builder: (_) => DeleteAllPostsDialog(
+                          firestoreControl: _firestoreControl,
+                          posts: _posts,
+                        ),
+                      );
+                    },
+                  ) : Container(),
+                  ListTile(
+                    leading: Icon(MdiIcons.sendOutline),
+                    title: Text('Send Feedback'),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Snapfeed.of(context).startFeedback();
+                    },
+                  ),
+                  Divider(height: 0),
+                  ListTile(
+                    leading: Icon(MdiIcons.informationVariant),
+                    title: Text(_packageInfo.appName),
+                    subtitle: Text('Version ' + _packageInfo.version),
+                  ),
+                ],
+              ),
             ),
-            ListTile(
-              leading: Icon(Icons.delete_outline),
-              title: Text('Delete All Posts'),
-              onTap: () async {
-                Navigator.pop(context);
-                QuerySnapshot _posts = await _firestoreControl.posts.getDocuments();
-                if (_posts.documents.length == 0) {
-                  widget.scaffoldKey.currentState.showSnackBar(SnackBar(
-                    backgroundColor: Theme.of(context).accentColor,
-                    content: Text(
-                      'There are no posts to delete',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    behavior: SnackBarBehavior.floating,
-                  ));
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (_) => DeleteAllPostsDialog(
-                      firestoreControl: _firestoreControl,
-                      posts: _posts,
-                    ),
-                  );
-                }
-              },
-            ),
-            ListTile(
-              leading: Icon(MdiIcons.sendOutline),
-              title: Text('Send Feedback'),
-              onTap: () {
-                Navigator.pop(context);
-                Snapfeed.of(context).startFeedback();
-              },
-            ),
-            Divider(height: 0),
-            ListTile(
-              leading: Icon(MdiIcons.informationVariant),
-              title: Text(_packageInfo.appName),
-              subtitle: Text('Version ' + _packageInfo.version),
-            ),
-            /*ListTile(
-              leading: Icon(Icons.alternate_email),
-              title: Text('Contact Developer'),
-              onTap: () {},
-            ),*/
-          ],
-        ),
-      ),
+          );
+        }
+      },
     );
   }
 }

@@ -17,9 +17,9 @@ class FirestoreControl {
   }
 
   /// Delete all post documents from posts collection
-  Future deleteAllPosts(QuerySnapshot postsToDelete) async {
-    for (int i = 0; i < postsToDelete.documents.length; i++) {
-      DocumentReference _postRef = postsToDelete.documents[i].reference;
+  Future deleteAllPosts(List<DocumentSnapshot> postsToDelete) async {
+    for (int i = 0; i < postsToDelete.length; i++) {
+      DocumentReference _postRef = postsToDelete[i].reference;
       _postRef.delete();
     }
   }
