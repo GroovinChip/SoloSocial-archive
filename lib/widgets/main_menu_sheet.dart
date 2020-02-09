@@ -1,3 +1,4 @@
+import 'package:sentry/sentry.dart';
 import 'package:solo_social/library.dart';
 import 'package:path/path.dart' as p;
 import 'package:csv/csv.dart' as csv;
@@ -84,6 +85,7 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
   @override
   Widget build(BuildContext context) {
     final _packageInfo = Provider.of<PackageInfo>(context);
+    final _sentry = Provider.of<SentryClient>(context);
     return Theme(
       data: ThemeData.dark(),
       child: Container(
@@ -133,7 +135,9 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
                     leading: Icon(MdiIcons.cloudDownloadOutline),
                     title: Text('Download Posts'),
                     onTap: () {
-                      _exportPosts(snapshot.data);
+                      _exportPosts(snapshot.data).catchError((error) async {
+                        await _sentry.captureException(exception: error);
+                      });
                       shareFile();
                     },
                   );
