@@ -1,5 +1,6 @@
 import 'package:sentry/sentry.dart';
 import 'package:solo_social/library.dart';
+import 'package:solo_social/utilities/firestore_control.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -10,7 +11,6 @@ class _LoginState extends State<Login> {
   /// Firebase related initializations
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final CollectionReference _users = Firestore.instance.collection('Users');
 
   /// Sign in with Google Auth
   Future<FirebaseUser> _handleSignIn() async {
@@ -43,8 +43,10 @@ class _LoginState extends State<Login> {
               onPressed: () async {
                 _handleSignIn().then((FirebaseUser user) async {
                   _userBloc.user.add(user);
-                  if (_users.document(user.uid).path.isEmpty) {
-                    await _users.document(user.uid).setData({});
+                  final _firestoreControl = FirestoreControl(user.uid);
+                  _firestoreControl.getPosts();
+                  if (_firestoreControl.posts.document(user.uid).path.isEmpty) {
+                    await _firestoreControl.posts.document(user.uid).setData({});
                   }
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(

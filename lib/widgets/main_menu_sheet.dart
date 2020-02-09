@@ -2,6 +2,7 @@ import 'package:sentry/sentry.dart';
 import 'package:solo_social/library.dart';
 import 'package:path/path.dart' as p;
 import 'package:csv/csv.dart' as csv;
+import 'package:solo_social/utilities/firestore_control.dart';
 
 // ignore: must_be_immutable
 class MainMenuSheet extends StatefulWidget {
@@ -86,6 +87,8 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
   Widget build(BuildContext context) {
     final _packageInfo = Provider.of<PackageInfo>(context);
     final _sentry = Provider.of<SentryClient>(context);
+    final _firestoreControl = FirestoreControl(widget.user.uid);
+    _firestoreControl.getPosts();
     return Theme(
       data: ThemeData.dark(),
       child: Container(
@@ -126,7 +129,7 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
               ),
             ),
             StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('Users').document(widget.user.uid).collection('Posts').snapshots(),
+              stream: _firestoreControl.posts.snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return CircularProgressIndicator();
@@ -149,8 +152,7 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
               title: Text('Delete All Posts'),
               onTap: () async {
                 //todo: add prompt asking user if they really want to delete all
-                CollectionReference _postsRef = Firestore.instance.collection('Users').document(widget.user.uid).collection('Posts');
-                QuerySnapshot _posts = await _postsRef.getDocuments();
+                QuerySnapshot _posts = await _firestoreControl.posts.getDocuments();
 
                 if (_posts.documents.length > 0) {
                   for (int i = 0; i < _posts.documents.length; i++) {

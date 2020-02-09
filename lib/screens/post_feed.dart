@@ -1,4 +1,5 @@
 import 'package:solo_social/library.dart';
+import 'package:solo_social/utilities/firestore_control.dart';
 
 class PostFeed extends StatefulWidget {
   final FirebaseUser user;
@@ -13,10 +14,10 @@ class PostFeed extends StatefulWidget {
 }
 
 class _PostFeedState extends State<PostFeed> {
-  final CollectionReference _users = Firestore.instance.collection('Users');
-
   @override
   Widget build(BuildContext context) {
+    final _firestoreControl = FirestoreControl(widget.user.uid);
+    _firestoreControl.getPosts();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -30,7 +31,7 @@ class _PostFeedState extends State<PostFeed> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: _users.document(widget.user.uid).collection('Posts').snapshots(),
+        stream: _firestoreControl.posts.snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -65,6 +66,7 @@ class _PostFeedState extends State<PostFeed> {
                     postText: _post['PostText'],
                     tags: _tags == null || _tags.length == 0 ? [] : _tags,
                     sourceLink: _post['SourceLink'].toString().isEmpty ? 'NoSource' : _post['SourceLink'],
+                    firestoreControl: _firestoreControl,
                   );
                 },
               );

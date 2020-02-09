@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sentry/sentry.dart';
 import 'package:solo_social/library.dart';
+import 'package:solo_social/utilities/firestore_control.dart';
 
 import 'post_feed.dart';
 
@@ -15,7 +16,6 @@ class _IntroductionState extends State<Introduction> {
   /// Firebase related initializations
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final CollectionReference _users = Firestore.instance.collection('Users');
 
   /// Sign in with Google Auth
   Future<FirebaseUser> _handleSignIn() async {
@@ -162,8 +162,10 @@ class _IntroductionState extends State<Introduction> {
                   _handleSignIn().then((FirebaseUser user) async {
                     _setFirstLaunchFlag();
                     _userBloc.user.add(user);
-                    if (_users.document(user.uid).path.isEmpty) {
-                      await _users.document(user.uid).setData({});
+                    final _firestoreControl = FirestoreControl(user.uid);
+                    _firestoreControl.getPosts();
+                    if (_firestoreControl.users.document(user.uid).path.isEmpty) {
+                      await _firestoreControl.users.document(user.uid).setData({});
                     }
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
