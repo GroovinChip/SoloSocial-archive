@@ -25,6 +25,7 @@ export 'package:share_extend/share_extend.dart';
 export 'package:path_provider_ex/path_provider_ex.dart';
 export 'package:package_info/package_info.dart';
 export 'package:snapfeed/snapfeed.dart';
+export 'package:permission_handler/permission_handler.dart';
 
 /// Screens
 export 'package:solo_social/screens/post_feed.dart';
@@ -44,3 +45,4 @@ export 'package:solo_social/widgets/compose_fab.dart';
 export 'package:solo_social/utilities/auth_check.dart';
 export 'package:solo_social/utilities/bloc.dart';
 export 'package:solo_social/utilities/firestore_control.dart';
+export 'package:solo_social/utilities/export_posts.dart';

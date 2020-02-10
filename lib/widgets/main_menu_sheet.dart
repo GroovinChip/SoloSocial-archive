@@ -1,11 +1,8 @@
 import 'package:sentry/sentry.dart';
 import 'package:solo_social/widgets/delete_all_posts_dialog.dart';
 import 'package:solo_social/library.dart';
-import 'package:path/path.dart' as p;
-import 'package:csv/csv.dart' as csv;
 import 'package:solo_social/utilities/firestore_control.dart';
 
-// ignore: must_be_immutable
 class MainMenuSheet extends StatefulWidget {
   final FirebaseUser user;
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -21,7 +18,7 @@ class MainMenuSheet extends StatefulWidget {
 
 class _MainMenuSheetState extends State<MainMenuSheet> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final DateFormat dateFormat = DateFormat.yMd().add_jm();
+  PermissionStatus storagePermission;
   List<StorageInfo> _storageInfo = [];
 
   Future<void> _getStorageInfo() async {
@@ -37,47 +34,11 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
     });
   }
 
-  Future<String> get _localPath async {
-    final externalDir = _storageInfo[0];
-    final dataDir = Directory(p.join(externalDir.rootDir, 'SoloSocial'));
-    await dataDir.create(recursive: true);
-    return dataDir.path;
-  }
-
-  Future<File> get _localFile {
-    return _localPath.then((path) => File(p.join(path, 'SoloSocial Post Records.csv')));
-  }
-
-  /// Export user's posts to a readable CSV file
-  Future<void> _exportPosts(QuerySnapshot posts) async {
-    // Headers
-    List<List<String>> data = [
-      ['Username', 'Time Created', 'Post Text', 'Tags', 'Source Link'],
-    ];
-
-    // Add post record to data
-    for (final DocumentSnapshot post in posts.documents) {
-      data.add([
-        post['Username'],
-        dateFormat.format((post['TimeCreated'] as Timestamp).toDate()),
-        post['PostText'],
-        post['Tags'],
-        post['SourceLink'],
-      ]);
-    }
-    final file = await _localFile;
-
-    // Convert data to csv format
-    final csvData = csv.ListToCsvConverter().convert(data);
-
-    // Write csv to internal storage
-    await file.writeAsString(csvData, flush: true);
-  }
-
-  void shareFile() async {
-    File postRecords = await _localFile;
-    Navigator.pop(context);
-    ShareExtend.share(postRecords.path, 'file');
+  void checkStoragePermission() async {
+    Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions(
+      [PermissionGroup.storage],
+    );
+    storagePermission = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
   }
 
   @override
@@ -95,6 +56,7 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
       context: context,
     );
     _firestoreControl.getPosts();
+    final ExportPosts _exportPosts = ExportPosts(_storageInfo);
     return StreamBuilder<QuerySnapshot>(
       stream: _firestoreControl.posts.snapshots(),
       builder: (context, snapshot) {
@@ -113,9 +75,9 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
                   Padding(
                     padding: const EdgeInsets.all(8),
                     child: ModalDrawerHandle(
-                      /*handleWidth: 50,
+                        /*handleWidth: 50,
                 handleHeight: 2,*/
-                    ),
+                        ),
                   ),
                   ListTile(
                     leading: CircleAvatar(
@@ -136,35 +98,45 @@ class _MainMenuSheetState extends State<MainMenuSheet> {
                           MaterialPageRoute(
                             builder: (context) => Login(),
                           ),
-                              (route) => false,
+                          (route) => false,
                         );
                       },
                     ),
                   ),
-                  _posts.length > 0 ? ListTile(
-                    leading: Icon(MdiIcons.cloudDownloadOutline),
-                    title: Text('Download Posts'),
-                    onTap: () {
-                      _exportPosts(snapshot.data).catchError((error) async {
-                        await _sentry.captureException(exception: error);
-                      });
-                      shareFile();
-                    },
-                  ) : Container(),
-                  _posts.length > 0 ? ListTile(
-                    leading: Icon(Icons.delete_outline),
-                    title: Text('Delete All Posts'),
-                    onTap: () async {
-                      Navigator.pop(context);
-                      showDialog(
-                        context: context,
-                        builder: (_) => DeleteAllPostsDialog(
-                          firestoreControl: _firestoreControl,
-                          posts: _posts,
-                        ),
-                      );
-                    },
-                  ) : Container(),
+                  _posts.length > 0
+                      ? ListTile(
+                          leading: Icon(MdiIcons.cloudDownloadOutline),
+                          title: Text('Download Posts'),
+                          onTap: () {
+                            checkStoragePermission();
+                            if (storagePermission != null && storagePermission.value == 2) {
+                              _exportPosts.postsToCsv(snapshot.data).catchError((error) async {
+                                await _sentry.captureException(exception: error);
+                              });
+                              Navigator.pop(context);
+                              _exportPosts.shareFile();
+                            } else {
+                              // snackbar?
+                            }
+                          },
+                        )
+                      : Container(),
+                  _posts.length > 0
+                      ? ListTile(
+                          leading: Icon(Icons.delete_outline),
+                          title: Text('Delete All Posts'),
+                          onTap: () async {
+                            Navigator.pop(context);
+                            showDialog(
+                              context: context,
+                              builder: (_) => DeleteAllPostsDialog(
+                                firestoreControl: _firestoreControl,
+                                posts: _posts,
+                              ),
+                            );
+                          },
+                        )
+                      : Container(),
                   ListTile(
                     leading: Icon(MdiIcons.sendOutline),
                     title: Text('Send Feedback'),
